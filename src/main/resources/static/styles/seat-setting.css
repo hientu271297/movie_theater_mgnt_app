@@ -1,0 +1,96 @@
+.seats {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.note {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td.seat {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #fff;
+    display: inline-block;
+    margin: 5px;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+
+}
+
+.note-seat {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #fff;
+    display: block;
+    margin: 10px 10px 10px 50px;
+}
+
+td.seat.vip {
+    border:3px solid red;
+    color: red;
+}
+
+td.seat.normal {
+    border:3px solid green;
+    color: green;
+}
+
+td.seat.broken {
+    background-color: grey;
+    color: grey;
+}
+
+td.seat.normal.select{
+    background-color: orange;
+    color: white;
+}
+
+td.seat.vip.select{
+    background-color: orange;
+    color: white;
+}
+td.seat.normal.look{
+    background-color: grey;
+    color: white;
+}
+
+td.seat.vip.look{
+    background-color: grey;
+    color: white;
+}
+
+.screen {
+    background-color: gray;
+    width: 55%;
+    height: 30px;
+    margin: 40px auto auto;
+    border-top-right-radius: 100px;
+    border-top-left-radius: 100px;
+    text-align: center;
+    color: #fff;
+    font-size: large;
+}

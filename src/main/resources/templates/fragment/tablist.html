@@ -1,0 +1,80 @@
+<div class="d-sm-flex align-items-center justify-content-between border-bottom">
+    <ul class="nav nav-tabs" role="tablist" style="flex-wrap: nowrap;width:70%">
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${movieList} ? 'active' : '' " id="home-tab" th:href="@{/movie}"
+               role="tab" aria-controls="overview" aria-selected="true">Movie List</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+            <a class="nav-link" th:classappend="${employeeList} ? 'active' : '' " id="profile-tab"
+               th:href="@{/employee}" role="tab" aria-selected="false">Employee List</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+            <a class="nav-link" th:classappend="${roomDetailDtos} ? 'active' : '' " id="room-tab"
+               th:href="@{/admin/room}" role="tab" aria-selected="false">Room List</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${bookingDtoList} ? 'active' : '' " id="booking-tab"
+               th:href="@{/booking-list}" role="tab" aria-selected="false">Booking List</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${memberDtos} ? 'active' : '' " id="member-tab" th:href="@{/members}"
+               role="tab" aria-selected="false">Member List</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+            <a class="nav-link" th:classappend="${scheduleWrapper} ? 'active' : '' " id="schedule-tab"
+               th:href="@{/admin/schedule}" role="tab" aria-selected="false">Schedule List</a>
+        </li>
+    </ul>
+    <form th:if="${scheduleWrapper == null}" class="mt-1 mb-3 d-flex justify-content-start align-items-center"
+          id="user-search" name="user-search"
+          method="get" th:action="@{${movieList != null ? '/movie'
+                                               : (employeeList != null ? '/employee'
+                                               : (roomDetailDtos != null ? '/admin/room'
+                                               : (bookingDtoList != null ? '/booking-list'
+                                               : (memberDtos != null ? '/members': '/voucher'))))}}">
+
+
+        <div th:if="${bookingDtoList == null && memberDtos == null && roomDetailDtos == null}"
+             class="input-group p-0 me-2 dropdown d-flex">
+            <select th:if="${movieList}" name="filter" onchange="changeTypeSearch()" th:id="filter"
+                    class="form-select w-50 rounded-start-0" style="display: inline;border: 1px solid #dee2e6;
+    font-weight: 400;
+    font-size: 0.875rem;
+    height: 38px;
+">
+                <option th:selected="${filter} =='none'" hidden="hidden" value="none">Filter by</option>
+                <option th:selected="${filter} =='movieName'" value="movieName">Movie name</option>
+                <option th:selected="${filter} =='year'" value="year">Year of product</option>
+                <option th:selected="${filter} =='duration'" value="duration">Duration</option>
+                <option th:selected="${filter} =='earlyDate'" value="earlyDate">Early date</option>
+                <option th:selected="${filter} =='startDate'" value="startDate">Start date</option>
+                <option th:selected="${filter} =='endDate'" value="endDate">End date</option>
+                <option th:selected="${filter} =='producer'" value="producer">Production company</option>
+                <option th:selected="${filter} =='actor'" value="actor">Actor</option>
+                <option th:selected="${filter} =='moviePrice'" value="moviePrice">Movie price</option>
+            </select>
+            <!--                        filter search of employeeList-->
+            <select th:if="${employeeList}" name="filter" onchange="changeTypeSearch()" th:id="filter"
+                    class="form-select" style="display: inline;border: 1px solid #dee2e6;
+    font-weight: 400;
+    font-size: 0.875rem;
+">
+                <option th:selected="${filter} =='none'" hidden="hidden" value="none">Filter by</option>
+                <option th:selected="${filter} =='fullName'" value="fullName">Full name</option>
+                <option th:selected="${filter} =='dateOfBirth'" value="dateOfBirth">Date of birth</option>
+                <option th:selected="${filter} =='phone'" value="phone">Phone</option>
+                <option th:selected="${filter} =='address'" value="address">Address</option>
+                <option th:selected="${filter} =='email'" value="email">Email</option>
+            </select>
+        </div>
+        <div class="input-group me-2">
+            <input style="height: 38px;border: 1px solid #dee2e6;
+    font-weight: 400;
+    font-size: 0.875rem;
+    color:silver;
+    color: silver;" required type="search" name="q" id="search-content" class="form-control ps-2" placeholder="Search"
+                   aria-label="search" aria-describedby="user-search">
+        </div>
+        <button style="height: 38px;margin: auto" type="submit" class="btn btn-dark text-white">Search</button>
+    </form>
+</div>

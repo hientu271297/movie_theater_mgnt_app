@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Movie-view</title>
+    <th:block th:insert="fragment/head" />
+</head>
+<body>
+<div class="container-scroller">
+    <!--pro-banner-->
+    <th:block th:insert="fragment/probanner" />
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+    <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper" />
+    <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar" />
+    <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+    <!-- main panel-->
+        <div class="main-panel">
+        <!--content-->
+            <div class="content-wrapper">
+            <!--row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="home-tab">
+                <!--tab list-->
+                            <th:block th:insert="fragment/tablist" />
+                            <div class="tab-content tab-content-basic">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Movie List</h4>
+
+                                        <!--    modal confirm delete-->
+                                        <div class="modal"  id="deleteConfirm"  role="dialog"></div>
+
+                                        <!--    result action-->
+                                        <div th:id="result" th:if="${result}">
+                                            <div class="px-4 py-4 d-flex justify-content-between" style="background-color: #00f700">
+                                                <div th:text="${result}"></div>
+                                                <button onclick="display()" class="text-danger">X</button>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Picture</th>
+                                                    <th scope="col">
+                                                            <span th:if="${sorts.get(1).equalsIgnoreCase('-movieName')}">down<i class="bi bi-sort-down"></i>
+                                                            </span>
+                                                        <span th:if="${sorts.get(1).equalsIgnoreCase('movieName')}">up<i class="bi bi-sort-up"></i>
+                                                            </span>
+                                                        <a style="text-decoration: none; color: black"
+                                                           th:href="@{${sorts.get(1).isEmpty()
+                                                           ? '/movie?sort=' + sorts.get(0)+ '&sort=movieName'
+                                                           : (sorts.get(1).equalsIgnoreCase('movieName') ? '/movie?sort=' + sorts.get(0) + '&sort=-movieName'
+                                                                                                         : '/movie?sort='+ sorts.get(0) +'&sort=')}}">
+                                                            Movie Name
+                                                        </a>
+                                                    </th>
+
+                                                    <th>Release Date</th>
+                                                    <th>Actor</th>
+                                                    <th>Movie Production Company</th>
+                                                    <th>Duration</th>
+                                                    <th>
+                                                        <span th:if="${sorts.get(0).equalsIgnoreCase('-hottedMovie')}">down<i class="bi bi-sort-down"></i>
+                                                        </span>
+                                                        <span th:if="${sorts.get(0).equalsIgnoreCase('hottedMovie')}">up<i class="bi bi-sort-up"></i>
+                                                            </span>
+                                                        <a style="text-decoration: none; color: black"
+                                                           th:href="@{${sorts.get(0).equalsIgnoreCase('hottedMovie')
+                                                           ? '/movie?sort=' + '-hottedMovie'+ '&sort='
+                                                           : '/movie?sort=' + 'hottedMovie' + '&sort='}}">
+                                                            Hot movie
+                                                        </a>
+                                                    </th>
+                                                    <th>Detail</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="e,i : ${movieList}">
+                                                    <td th:text="${pageNumber*size + i.count}"></td>
+                                                    <td class="py-1">
+                                                        <img th:if="${e.getImageLargeUrl()}" style="max-width: 100px;max-height: 100px" alt="poster" th:src="@{/files/{url} (url = ${e.getImageLargeUrl()})}">
+                                                    </td>
+                                                    <td th:text="${e.getMovieName()}"></td>
+                                                    <td th:text="${e.getStartDate()}"></td>
+                                                    <td th:text="${e.getActor()}"></td>
+                                                    <td th:text="${e.getProducer()}"></td>
+                                                    <td th:text="${e.getDuration()}"></td>
+                                                    <td th:text="${e.getHottedMovie()}"></td>
+                                                    <td>
+                                                        <a th:href="@{/movie/update/{id}(id=${e.getMovieId()})}"><ion-icon name="create-outline" class="btn btn-warning m-0 "></ion-icon></a>
+                                                    </td>
+                                                    <td>
+                                                        <a  class="btn btn-danger m-0 "><ion-icon name="alert-outline"></ion-icon></a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+<!--            paging-->
+            <nav aria-label="Page navigation example" th:if="${totalPage > 1}">
+                <ul class="pagination">
+
+                    <!--check button previous-->
+                    <li th:classappend="${pageNumber} <= 0 ? 'disabled page-item' : 'page-item'">
+                        <a class="page-link" th:href="@{/movie(pageNumber = ${pageNumber -1}, size=${size}, q=${q})}" aria-label="Previous">
+                            <span aria-hidden="true"><i class="fas fa-angle-left"></i></span>
+                        </a>
+                    </li>
+
+                    <!-- First button-->
+                    <li class="page-item" th:if="${pageNumber} - 3 > 0">
+                        <a class="page-link" th:href="@{/movie(pageNumber = 0, size=${size}, q=${q})}" th:text="'First'"></a>
+                    </li>
+                    <li class="page-item" th:if="${pageNumber} - 3 > 0"><span class="page-link"> ... </span></li>
+
+                    <!--total page <= 5   -->
+                    <li class="page-item" th:if="${totalPage <= 5}" th:each="i : ${#numbers.sequence(0,totalPage - 1)}">
+                        <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'" th:href="@{/movie(pageNumber = ${i}, size=${size}, q=${q})}" th:text="${i+1}"></a>
+                    </li>
+
+                    <!-- total page > 5 and page number < 2-->
+                    <li class="page-item" th:if="${totalPage > 5 && pageNumber < 2}" th:each="i : ${#numbers.sequence(0,4)}">
+                        <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'" th:href="@{/movie(pageNumber = ${i}, size=${size}, q=${q})}" th:text="${i+1}"></a>
+                    </li>
+
+                    <!-- total page > 5 and page number >=2 and page < total page - 2 -->
+                    <li class="page-item" th:if="${totalPage > 5 && pageNumber >= 2 && pageNumber < totalPage - 2}" th:each="i : ${#numbers.sequence(0,4)}">
+                        <a class="page-link" th:style="${i == 2} ? 'background-color: #0d6efd; color: white'" th:href="@{/movie(pageNumber = ${pageNumber - 2 + i}, size=${size}, q=${q})}" th:text="${pageNumber - 1 + i}"></a>
+                    </li>
+
+                    <!-- total page > 5 and page number >=2 and page >= total page - 2 -->
+                    <li class="page-item" th:if="${totalPage > 5 && pageNumber >= 2 && pageNumber >= totalPage - 2}" th:each="i : ${#numbers.sequence(totalPage - 5, totalPage - 1)}">
+                        <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'" th:href="@{/movie(pageNumber = ${i}, size=${size}, q=${q})}" th:text="${i+1}"></a>
+                    </li>
+
+                    <!--last button-->
+                    <li class="page-item" th:if="${pageNumber + 4 <= totalPage - 1}"><span class="page-link"> ... </span></li>
+                    <li class="page-item" th:if="${pageNumber + 4 <= totalPage - 1}">
+                        <a class="page-link" th:href="@{/movie(pageNumber = ${totalPage -1}, size=${size}, q=${q})}" th:text="'Last'"></a>
+                    </li>
+
+                    <!--check button next-->
+                    <li th:if="${totalPage > 1}" th:class="(${pageNumber} >= (${totalPage}-1)) ? 'disabled page-item' : 'page-item'">
+                        <a class="page-link" th:href="@{/movie(pageNumber = ${pageNumber +1}, size=${size}, q=${q})}" aria-label="Next">
+                            <span aria-hidden="true"><i class="fas fa-angle-right"></i></span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        <!--footers-->
+        <th:block th:insert="fragment/footers" />
+
+        </div>
+        <!-- main panel ends -->
+    </div>
+    <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+
+<script th:inline="javascript">
+
+    const myTimeout = setTimeout(display, 5000);
+
+    function display(){
+        const x = document.getElementById("result");
+        if(x){
+            x.style.display = "none";
+        }
+    }
+    function confirmDelete(id,pageNumber,size,q){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display='block';
+        doc.innerHTML=
+            `<div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="displayNone()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-danger">Certificate will be Deleted</p>
+                        <p><b>ARE YOU SURE ?</b></p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="displayNone()">Close</button>
+                    <button type="button" class="btn btn-danger" >
+
+                        <a style="text-decoration: none; color: white" href="/manage-cinema/employee/admin/delete/${id}?pageNumber=${pageNumber}&size=${size}&q=${q}">
+                            Confirm Delete
+                        </a>
+                    </button>
+                    </div>
+                </div>
+        </div>`
+    }
+    function displayNone(){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display='none';
+    }
+</script>
+
+</body>
+
+</html>
+

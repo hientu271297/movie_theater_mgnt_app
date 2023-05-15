@@ -1,0 +1,1175 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragment/head" />
+    <title>Movie-form</title>
+
+</head>
+<body>
+<div class="container-scroller">
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+        <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper" />
+        <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar" />
+        <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+        <!-- main panel-->
+        <div class="main-panel">
+            <!--content-->
+            <div class="content-wrapper">
+                <!--row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="home-tab">
+                            <th:block th:insert="fragment/tablist" />
+                            <div class="tab-content tab-content-basic">
+                                <div class="card">
+                                    <div class="card-body border-bottom">
+                                        <form th:action="@{/admin/schedule/getInfo}" method="GET">
+
+                                            <h2 class="card-description mx-auto">MANAGE SCHEDULE</h2>
+                                            <div class="d-flex">
+                                                <div>
+                                                    <button style="color: white" class="btn btn-primary" type="button" id="getCity">
+                                                        Get list cities</button>
+                                                    <div class="table-responsive">
+                                                        <div class="d-flex">
+                                                            <div class="d-flex flex-column justify-content-around mb-2">
+                                                                <label style="display: none;font-weight: bold" id="label-city" for="city-select">City: </label>
+                                                                <label style="display: none;font-weight: bold" id="label-cinema" for="cinema-select">Cinema: </label>
+                                                                <label style="display: none;font-weight: bold" id="label-room" for="room-select">Room: </label>
+                                                            </div>
+                                                            <div class="d-flex flex-column justify-content-between ms-2 mb-2">
+                                                                <select name="cityIndex" id="city-select"></select>
+                                                                <p id="city-error" class="text-danger"></p>
+                                                                <select name="cinemaIndex" id="cinema-select"></select>
+                                                                <p id="cinema-error" class="text-danger"></p>
+                                                                <select name="roomId" id="room-select" ></select>
+                                                                <p id="room-error" class="text-danger"></p>
+                                                            </div>
+                                                            <div class="ms-5">
+                                                                <label for="date" style="font-weight: bolder">Choose date: </label>
+                                                                <input required name="date" id="date" type="date" onfocusout="checkDate()" th:value="${scheduleWrapper.getDate() != null ? scheduleWrapper.getDate() : ''}">
+                                                                <div class="text-danger" id="errorDate" th:text="${errorDate != null ? errorDate : ''}"></div>
+                                                                <div id="dateNowError" style="display: none" class="text-danger">Time must be present or future</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mt=3 d-flex">
+                                                            <div><button style="color: white" type="submit" class="btn btn-primary" id="getSchedule">Get schedules and films</button></div>
+                                                            <!--                                                            <div class="ms-3"><button style="color: white" class="btn btn-primary" id="getSchedules" type="button" onclick="listSchedules()">Get schedules</button></div>-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-danger" th:text="${errorRoomId != null ? errorRoomId : ''}"></div>
+                                                </div>
+
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="card-body border-bottom">
+                                        <h3>LIST MOVIES</h3>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <button class="btn btn-primary" style="color: white" type="button" onclick="getMovies()">Get Movies</button>
+                                            <div class="d-flex"><div class="me-1"><input type="text" class="form-control" id="searchMovie" name="keyword"></div>
+                                                <button type="button" class="btn btn-primary" style="color: white" onclick="searchMovies()">search</button></div>
+                                        </div>
+                                        <div id="listMovies" class="card-body d-flex flex-wrap justify-content-between ps-0 pb-0">
+                                            <div style="width: 18%" class="card mb-3 p-2 border" th:each="m,i : ${movieWithFormatDtos}">
+                                                <div class="d-flex flex-column">
+                                                    <img class="card-img-top" style="max-height: 120px; object-fit: cover"
+                                                         th:src="@{${m.getImageSmallUrl() != null ? '/files/' + m.getImageSmallUrl() : ''}}" alt="film image">
+                                                    <div class="d-flex mt-2"><p style="width: 35%">Movie name:&nbsp;</p><p th:text="${m.getMovieName()}"></p></div>
+                                                    <div class="d-flex"><p style="width: 35%">Producer:&nbsp;</p><p th:text="${m.getProducer()}"></p></div>
+                                                    <div class="d-flex"><p style="width: 35%">Duration:&nbsp;</p><p th:text="${m.getDuration()}"></p></div>
+                                                    <div class="d-flex flex-wrap">
+                                                        <p style="width: 35%">Format:&nbsp</p>
+                                                        <p th:each="f : ${m.getMovieFormats()}" th:text="${f.getMovieFormatName()+'&nbsp;'}"></p>
+                                                    </div>
+                                                    <div class="d-flex flex-wrap">
+                                                        <p style="width: 35%">Category:&nbsp;</p>
+                                                        <p th:each="f : ${m.getCategories()}" th:text="${f.getCategoryName()+'&nbsp;'}"></p>
+                                                    </div>
+                                                    <div class="d-flex"><p style="width: 35%">Early date:&nbsp;</p><p th:text="${m.getStartDate()}"></p></div>
+                                                </div>
+
+                                                <button class="addFilm btn btn-primary" style="color: white"
+                                                        th:attr="onclick=|addToSchedule(${i.index})|"
+                                                        th:value="${m.movieId}">add to schedule</button>
+                                            </div>
+                                        </div>
+                                        <div id="pagingMovie">
+                                            <nav th:if="${totalPage > 0}" aria-label="Page navigation example">
+                                                <ul class="pagination">
+                                                    <li id="prev" th:class="(${pageNumber} <= 0) ? 'disabled page-item' : 'page-item'">
+                                                        <a class="page-link" th:attr="onclick=|paging(${pageNumber - 1}, ${size})|" href="javascript:void(0)"
+                                                           aria-label="Previous">
+                                                            <span aria-hidden="true">&laquo;</span>
+                                                        </a>
+                                                    </li>
+                                                    <li id="pageCurrent" class="page-item" ><a class="page-link" th:attr="onclick=|paging(${pageNumber}, ${size})|" th:text="${pageNumber + 1}" href="javascript:void(0)"></a></li>
+                                                    <li id="next" th:class="(${pageNumber} >= (${totalPage}-1)) ? 'disabled page-item' : 'page-item'" >
+                                                        <a class="page-link" th:attr="onclick=|paging(${pageNumber + 1}, ${size})|" href="javascript:void(0)"
+                                                           aria-label="Next">
+                                                            <span aria-hidden="true">&raquo;</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                        <div id="haveNotFilm" class="text-danger" th:if="${movies!=null && movies.isEmpty()}">have not list film of search date </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <h3>LIST SCHEDULES</h3>
+                                        <div id="results" th:if="${result != null}"><h4 style="color: green;visibility: visible" th:text="${result}"></h4></div>
+                                        <div><b>Auto fill: </b>end time or start time </div>
+                                        <div class="text-danger">Start time of next film must be >= end time of previous film + 30 minute</div>
+
+                                        <div><b>City set schedule: </b><span th:if="${scheduleWrapper.cityName}"  id="city-choose" th:text="${scheduleWrapper.cityName}"></span></div>
+                                        <div><b>Cinema set schedule: </b><span th:if="${scheduleWrapper.cinemaName}"  id="cinema-choose" th:text="${scheduleWrapper.cinemaName}"></span></div>
+                                        <div><b>Room set schedule: </b><span th:if="${scheduleWrapper.roomName}"  id="room-choose" th:text="${scheduleWrapper.roomName}"></span></div>
+                                        <div><b>Date set schedule: </b><span th:if="${scheduleWrapper.roomName}"  id="date-choose" th:text="${scheduleWrapper.date}"></span></div>
+
+                                        <h4 class="text-danger" style="display: none" id="warning">Schedule of this date may conflict previous date or next date</h4>
+                                        <h4 class="text-danger" style="display: none" id="suggest">You need to check the previous or next date before creating the list </h4>
+                                    </div>
+                                    <div class="card-body d-flex">
+                                        <form th:action="@{'/admin/schedule/create'}" style="width: 100%" method="POST">
+
+                                            <div class="modal"  id="deleteConfirm"  role="dialog"></div>
+                                            <div class="modal"  id="confirmSubmit"  role="dialog"></div>
+                                            <div class="modal"  id="confirmResetSchedule"  role="dialog"></div>
+
+                                            <input type="date" hidden readonly id="dateSchedule" name="date" th:value="${scheduleWrapper.date}">
+                                            <input type="number" hidden readonly id="roomSchedule" name="roomId" th:value="${scheduleWrapper.roomId}">
+                                            <div id="formAdd" class="d-flex align-items-center flex-wrap">
+                                                <div class="m-2 d-flex flex-column" style="width: 15%" th:id="${'item'+i.index}" th:each="s,i : ${scheduleWrapper.scheduleDtos}">
+                                                    <div class="card border p-2">
+                                                        <div>
+                                                            <p class="mx-auto" th:style="${s.statusEdit == 'AVAILABLE EDIT' ? 'color:green' : 'color:red'}"
+                                                               th:text="${s.statusEdit == 'AVAILABLE EDIT' ? 'Available update' : 'Can not edit'}">
+                                                            </p>
+                                                        </div>
+
+                                                        <img  style="max-height: 120px; object-fit: cover" class="card-img-top" th:src="@{${s.getImageSmallUrl() != null ? '/files/' + s.getImageSmallUrl() : ''}}" alt="image film">
+
+                                                        <input type="number" hidden readonly th:name="|scheduleDtos[${i.index}].movieId|" th:value="${s.getMovieId()}" />
+                                                        <input type="number" hidden readonly th:name="|scheduleDtos[${i.index}].scheduleId|" th:value="${s.getScheduleId()}"/>
+                                                        <div class="d-flex mt-2">
+                                                            <p style="width: 38%">Movie name: </p><p th:text="${s.getMovieName()}">
+                                                        </div>
+                                                        <div class="d-flex"><p style="width: 38%">Duration: </p><p th:text="${s.getDuration()}"></p></div>
+                                                        <div class="d-flex mb-2">
+                                                            <p style="width: 38%">start at: </p>
+                                                            <input type="time" th:readonly="${s.statusEdit != 'AVAILABLE EDIT'}"
+                                                                   th:id="|scheduleDtos[${i.index}].startAt|" th:name="|scheduleDtos[${i.index}].startAt|" th:value="${s.getStartAt()}">
+                                                        </div>
+                                                        <div class="d-flex">
+                                                            <p style="width: 38%">End at: </p>
+                                                            <input type="time" th:readonly="${s.statusEdit != 'AVAILABLE EDIT'}" th:id="|scheduleDtos[${i.index}].endAt|"
+                                                                   th:name="|scheduleDtos[${i.index}].endAt|" th:value="${s.getEndAt()}">
+                                                        </div>
+                                                        <div class="d-flex flex-wrap">
+                                                            <p style="width: 38%">Category: </p><p th:each="k : ${s.getCategories()}" th:text="${k.getCategoryName()+'&nbsp;'}"></p>
+                                                        </div>
+                                                        <div class="d-flex flex-wrap"><p style="width: 38%">Format: </p>
+                                                            <select th:name="|scheduleDtos[${i.index}].movieFormatId|">
+                                                                <option th:each="f : ${s.getMovieFormats()}" th:value="${f.getMovieFormatId()}" th:text="${f.getMovieFormatName()}"
+                                                                        th:selected="${s.getMovieFormatId() == f.getMovieFormatId()}"
+                                                                        th:disabled="${s.statusEdit != 'AVAILABLE EDIT' && s.getMovieFormatId() != f.getMovieFormatId()}"></option>
+                                                            </select></div>
+                                                        <div class="d-flex mt-2">
+                                                            <button class="btn btn-danger" style="color: white" th:if="${s.getStatusEdit() =='AVAILABLE EDIT'}" type="button" th:attr="onclick=|confirmRemove(${i.index},${s.getScheduleId()})|">Delete</button>
+                                                            <button class="btn btn-danger" style="color: white;visibility: hidden" th:if="${s.getStatusEdit() == null}" type="button" >Delete</button>
+                                                            <!--                                                           <button class="btn-danger" th:if="${s.getStatusEdit() =='AVAILABLE EDIT'}" type="button" th:attr="onclick=|confirmDelete(${s.getScheduleId()})|">Delete direct</button>-->
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div style="visibility: hidden" class="text-danger" th:id="'falseSet'+${i.index}">Check time</div>
+                                                        <div id="notEmpty${i}" class="text-danger mx-0" style="visibility: hidden">not empty</div>
+                                                        <div id="prevDay${i}" class="text-danger mx-0" style="visibility: hidden">play from previous day</div>
+                                                        <div id="nextDay${i}" class="text-danger mx-0" style="visibility: hidden">finish in next day</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex mt-5">
+                                                <div>
+                                                    <button type="button" onclick="confirmSubmit()" style="color: white" class="btn btn-primary" id="submitSchedule">submit</button>
+                                                </div>
+                                                <div class="ms-2"><button style="color: white" class="btn btn-danger" id="resetSchedules" type="button" onclick="confirmReset()">Reset</button></div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <h3 id="messageTimeError" class="text-danger"></h3>
+                                    <div class="text-danger" th:if="${scheduleWrapper.getScheduleDtos() != null
+                                    && scheduleWrapper.getScheduleDtos().size() == 0}">have not list schedule of search date and room</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--footers-->
+                <th:block th:insert="fragment/footers" />
+
+            </div>
+            <!-- main panel ends -->
+        </div>
+        <!-- page body wrapper ends -->
+    </div>
+    <!-- container scroller -->
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script th:inline="javascript">
+    const myTimeout = setTimeout(displayResult, 5000);
+
+    function displayResult(){
+        const x = document.getElementById("results");
+        if(x){
+            x.style.display = "none";
+        }
+    }
+    let count = 0;
+    let checkTime = 0;
+    let scheduleWrapper = [[${scheduleWrapper}]];
+
+    const firstListScheduleDtos = scheduleWrapper.scheduleDtos != null  ?  scheduleWrapper.scheduleDtos : [];
+    let listScheduleDtos = scheduleWrapper.scheduleDtos != null  ?  scheduleWrapper.scheduleDtos : [];
+    let lengthOfschedule = scheduleWrapper.scheduleDtos != null ? scheduleWrapper.scheduleDtos.length : 0;
+
+    let listCity = [[${listCity}]];
+    let listMovieDtos = [[${movieWithFormatDtos}]];
+
+    const contextPath = /*[[@{/}]]*/ '';
+
+    const dateInput = document.getElementById("date");
+    const now = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', now);
+
+    const date = new Date();
+    let today =  date.getDate() + (date.getMonth() + 1)*30 + date.getFullYear()*365;
+
+    function checkDate(){
+        $('#getSchedules').prop('disabled',false);
+        $('#dateNowError').css('display','none');
+
+        if($('#date').val()=="" || $('#date').val() == null){
+            $('#getSchedules').prop('disabled',true);
+            $('#dateNowError').css('display','block');
+        } else if((Number($('#date').val().substring(0,4))*365 + Number($('#date').val().substring(5,7))*30 + Number($('#date').val().substring(8,10))) < today){
+            $('#getSchedules').prop('disabled',true);
+            $('#dateNowError').css('display','block');
+        }
+    }
+
+    function getMovies(){
+        document.getElementById("searchMovie").value = '';
+        $.get({
+            url: contextPath + `admin/schedule/listMovies?pageNumber=0&size=5`
+        }).done(function (payload) {
+            listMovieDtos = payload.movieWithFormatDtos;
+            let totalPage = payload.totalPage;
+            displayMovies(listMovieDtos, 0, 5, totalPage);
+        })
+    }
+
+    if(!listScheduleDtos || listScheduleDtos.length === 0){
+        $('#submitSchedule').prop('disabled',true);
+    }
+
+    if (listScheduleDtos.length > 1){
+        sortingByStartTime(listScheduleDtos);
+        display(listScheduleDtos);
+    }
+
+    if (!document.getElementById("room-select").value || $('#date').val()=="" || $('#date').val() == null){
+        $('#getSchedules').prop('disabled',true);
+    }
+    function listSchedules(){
+        const doc2 = document.getElementById("confirmResetSchedule");
+        doc2.style.display = 'none';
+        let date = document.getElementById("date").value;
+        let roomId = document.getElementById("room-select").value;
+        $.get({
+            url: contextPath + `admin/schedule/listSchedules?roomId=${roomId}&date=${date}`
+        }).done(function (objectWrapper) {
+            if (objectWrapper !== "date error"){
+                scheduleWrapper = objectWrapper;
+                listScheduleDtos = objectWrapper.scheduleDtos;
+                sortingByStartTime(listScheduleDtos);
+                display(listScheduleDtos);
+            }
+        })
+    }
+
+    function searchMovies(){
+        let keyword = String(document.getElementById("searchMovie").value);
+        $.get({
+            url: contextPath + `admin/schedule/listMovies?pageNumber=0&size=5&q=${keyword}`
+        }).done(function (payload) {
+            listMovieDtos = payload.movieWithFormatDtos;
+            let totalPage = payload.totalPage;
+            let pageNumber = payload.pageNumber;
+            let size = 5;
+            displayMovies(listMovieDtos, pageNumber, size, totalPage);
+        })
+    }
+    function displayMovies(arr, pageNumber, size, totalPage) {
+        document.getElementById("listMovies").innerHTML = '';
+        $('#prev').removeClass("disabled");
+        $('#next').removeClass("disabled");
+        $('#haveNotFilm').css("display",'none');
+        for (let i = 0; i < arr.length; i++) {
+            document.getElementById("listMovies").innerHTML += `
+                     <div style="width: 18%" class="card mb-3 p-2 border">
+                            <div class="d-flex flex-column">
+                                <img class="card-img-top" style="max-height: 120px; object-fit: cover"
+                                    src="${contextPath}files/${arr[i].imageSmallUrl}" alt="film image">
+                                <div class="d-flex mt-2"><p style="width: 35%">Movie name:&nbsp;</p><p> ${arr[i].movieName}</p></div>
+                                <div class="d-flex"><p style="width: 35%">Producer:&nbsp;</p><p> ${arr[i].producer}</p></div>
+                                <div class="d-flex"><p style="width: 35%">Duration:&nbsp;</p><p> ${arr[i].duration}</p></div>
+                                <div id="movieFormat${i}" class="d-flex flex-wrap"><p style="width: 35%">Format:&nbsp;</p>
+                                </div>
+                                <div id="categories${i}" class="d-flex flex-wrap"><p style="width: 35%">Category: </p>
+                                </div>
+                            </div>
+                            <div class="d-flex"><p style="width: 35%">Early date:&nbsp;</p><p >${arr[i].earlyDate}</p></div>
+
+                            <button class="addFilm btn btn-primary" style="color: white"
+                                    onclick="addToSchedule(${i})"
+                                    th:value="${arr[i].movieId}">add to schedule</button>
+                        </div>
+                     </div>
+                `
+            if(arr[i].movieFormats){
+                for (let k = 0; k < arr[i].movieFormats.length; k++){
+                    document.getElementById(`movieFormat${i}`).innerHTML +=
+                        `<p>${arr[i].movieFormats[k].movieFormatName}&nbsp;</p>`
+                }
+            }
+            if(arr[i].categories){
+                for (let k = 0; k < arr[i].categories.length; k++){
+                    document.getElementById(`categories${i}`).innerHTML +=
+                        `<p>${arr[i].categories[k].categoryName}&nbsp;</p>`
+                }
+            }
+        }
+        if (arr.length == 0){
+            $('#haveNotFilm').css("display",'block');
+        }
+        $("#pagingMovie").empty();
+        if(totalPage > 1){
+            document.getElementById("pagingMovie").innerHTML =
+                `
+                <nav th:if="${totalPage > 0}" aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li id="prev" class="page-item">
+                            <a class="page-link" onclick="paging(${pageNumber - 1}, ${size})" href="javascript:void(0)"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li id="pageCurrent" class="page-item" ><a class="page-link" onclick="paging(${pageNumber}, ${size})" href="javascript:void(0)">${pageNumber + 1}</a></li>
+                        <li id="next" class="page-item" >
+                            <a class="page-link" onclick="paging(${pageNumber + 1}, ${size})" href="javascript:void(0)"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                `
+        }
+        if (pageNumber === 0){
+            $('#prev').addClass("disabled");
+        }
+        if (pageNumber === totalPage - 1){
+            $('#next').addClass("disabled");
+        }
+    }
+    function paging(pageNumber, size) {
+        let keyword = String(document.getElementById("searchMovie").value);
+        $.get({
+            url: contextPath + `admin/schedule/listMovies?pageNumber=${pageNumber}&size=${size}&q=${keyword}`
+        }).done(function (payload) {
+            listMovieDtos = payload.movieWithFormatDtos;
+            let totalPage = payload.totalPage;
+            displayMovies(listMovieDtos, pageNumber, size, totalPage);
+        })
+    }
+    function addToSchedule(index){
+
+        const scheduleDto ={
+            scheduleId : "",
+            movieId : listMovieDtos[index].movieId,
+            movieName : listMovieDtos[index].movieName,
+            duration: listMovieDtos[index].duration,
+            movieFormatId : "",
+            imageSmallUrl : listMovieDtos[index].imageSmallUrl,
+            movieFormats : listMovieDtos[index].movieFormats,
+            categories : listMovieDtos[index].categories,
+            startAt : "",
+            endAt : "",
+            statusEdit : 'AVAILABLE EDIT',
+            conflict : ""
+        }
+
+        listScheduleDtos.push(scheduleDto);
+        display(listScheduleDtos);
+
+        $("#submitSchedule").prop("disabled", true);
+        // $('.addFilm').prop('disabled', true);
+        // $('.timeInput').prop('disabled', true);
+        // document.getElementById(`scheduleDtos[${listScheduleDtos.length-1}].startAt`).disabled = false;
+        // document.getElementById(`scheduleDtos[${listScheduleDtos.length-1}].endAt`).disabled = false;
+
+    }
+
+    function removeItem(index){
+        listScheduleDtos.splice(index,1);
+        displayNone();
+        checkTimeSet();
+        displaySubmit();
+    }
+
+    function display(arr){
+        $('#warning').hide();
+        $('#suggest').hide();
+        $("#formAdd").empty();
+
+        document.getElementById("dateSchedule").value = scheduleWrapper.date;
+        document.getElementById("roomSchedule").value = scheduleWrapper.roomId;
+
+        for (let i = 0; i < arr.length; i++) {
+            document.getElementById("formAdd").innerHTML +=
+                `<div class="m-2 d-flex flex-column" style="width: 15%" id="listMovie">
+                    <div class="card border p-2">
+                        <div class="mx-auto" id="available${i}">  </div>
+
+                            <img class="card-img-top"  style="max-height: 120px; object-fit: cover" src="${contextPath}files/${arr[i].imageSmallUrl}" alt="image film">
+                            <input type="number" hidden readOnly name="scheduleDtos[${i}].movieId" value="${arr[i].movieId}"/>
+                            <input type="number" hidden readOnly name="scheduleDtos[${i}].scheduleId" value="${arr[i].scheduleId}"/>
+                            <div class="d-flex mt-2">
+                                <p style="width: 38%">Movie name:</p><p>${arr[i].movieName}</p>
+                            </div>
+                            <div class="d-flex">
+                                <p style="width: 38%">Duration:</p><p>${arr[i].duration}</p>
+                            </div>
+                            <div id="startAt${i}" class="mb-2 d-flex">
+                                <p style="width: 38%">Start at:&nbsp;</p>
+                                <input class="timeInput" id="scheduleDtos[${i}].startAt" type="time" onfocusout="setStartAt(${i},this.value)" name="scheduleDtos[${i}].startAt" value="${arr[i].startAt.substring(0,5)}" >
+                            </div>
+
+                            <div id="endAt${i}" class="d-flex">
+                                <p style="width: 38%">End at:&nbsp;</p>
+                                <input class="timeInput" type="time" id="scheduleDtos[${i}].endAt" onfocusout="setEndAt(${i},this.value)" name="scheduleDtos[${i}].endAt" value="${arr[i].endAt.substring(0,5)}">
+                            </div>
+
+                            <div id="category${i}" class="d-flex flex-wrap"><p style="width: 38%">Category:&nbsp;</p></div>
+
+                            <div class="d-flex flex-wrap"><p style="width: 38%">Format:&nbsp;</p><select id="select-movieFormat${i}" name="scheduleDtos[${i}].movieFormatId"></select></div>
+                            <a id="removeId${i}"></a>
+                    </div>
+                    <div >
+                        <div id="failedSet${i}" class="text-danger mx-0" style="visibility: hidden">Check time</div>
+                        <div id="notEmpty${i}" class="text-danger mx-0" style="visibility: hidden">not empty</div>
+                        <div id="prevDay${i}" class="text-danger mx-0" style="visibility: hidden">play from previous day</div>
+                        <div id="nextDay${i}" class="text-danger mx-0" style="visibility: hidden">finish in next day</div>
+                    </div>
+                </div>`
+            if (arr[i].statusEdit !='AVAILABLE EDIT'){
+                document.getElementById(`startAt${i}`).innerHTML =
+                    `
+                    <p style="width: 38%">Start at: </p>
+                    <input id="scheduleDtos[${i}].startAt" class="timeInput" type="time" readonly name="scheduleDtos[${i}].startAt" value="${arr[i].startAt.substring(0,5)}">
+                        `
+                document.getElementById(`endAt${i}`).innerHTML =
+                    `
+                    <p style="width: 38%">End at: </p>
+                    <input id="scheduleDtos[${i}].endAt" class="timeInput" type="time" readonly name="scheduleDtos[${i}].endAt" value="${arr[i].endAt.substring(0,5)}">
+                        `
+            }
+            if(arr[i].categories){
+                for(let k = 0; k < arr[i].categories.length; k++){
+                    document.getElementById(`category${i}`).innerHTML +=
+                        `<p>${arr[i].categories[k].categoryName}&nbsp;</p>`
+                }
+            }
+
+            const availableEdit = arr[i].statusEdit;
+            // loop to display option in select tag
+            if(arr[i].movieFormats){
+                for (let j = 0; j < arr[i].movieFormats.length; j++) {
+
+                    if (arr[i].movieFormatId === arr[i].movieFormats[j].movieFormatId){
+                        document.getElementById(`select-movieFormat${i}`).innerHTML +=
+                            `<option selected value="${arr[i].movieFormats[j].movieFormatId}">
+                        ${arr[i].movieFormats[j].movieFormatName}
+                     </option>`
+                    }
+                    else if (arr[i].statusEdit === 'AVAILABLE EDIT'){
+                        document.getElementById(`select-movieFormat${i}`).innerHTML +=
+                            `<option value="${arr[i].movieFormats[j].movieFormatId}">
+                        ${arr[i].movieFormats[j].movieFormatName}
+                     </option>`
+                    }
+                    else {
+                        document.getElementById(`select-movieFormat${i}`).innerHTML +=
+                            `<option disabled value="${arr[i].movieFormats[j].movieFormatId}">
+                        ${arr[i].movieFormats[j].movieFormatName}
+                    </option>`
+                    }
+                }
+            }
+
+            if (availableEdit === 'AVAILABLE EDIT' && arr[i].scheduleId == ""){
+                document.getElementById(`removeId${i}`).innerHTML = ` <button type="button" class="btn btn-warning mt-2" style="color: white" onclick="confirmRemove(${i},${arr[i].scheduleId})" id="removeItem${i}" class="text-danger">remove</button>`;
+                document.getElementById(`available${i}`).innerHTML = `<p style="color: green">Available edit</p>`
+            }
+
+            else if (availableEdit === 'AVAILABLE EDIT' && arr[i].scheduleId != ""){
+                document.getElementById(`removeId${i}`).innerHTML =
+                    ` <button type="button" class="btn btn-danger mt-2" style="color: white" onclick="confirmRemove(${i},${arr[i].scheduleId})" id="removeItem${i}" class="text-danger">delete</button>`;
+                document.getElementById(`removeId${i}`).innerHTML +=
+                    ` <button type="button" class="btn btn-danger mt-2" style="color: white" onclick="confirmDelete(${arr[i].scheduleId})" class="text-danger">delete direct</button>`;
+                document.getElementById(`available${i}`).innerHTML= `<p style="color: green">Available update</p>`
+            }
+            else if(availableEdit != 'AVAILABLE EDIT') {
+                document.getElementById(`available${i}`).innerHTML = `<p style="color: red">Can not edit</p>`
+
+                document.getElementById(`removeId${i}`).innerHTML =
+                    ` <button type="button" class="btn btn-danger mt-2" style="color: white;visibility: hidden" id="removeItem${i}" class="text-danger">delete</button>`;
+                document.getElementById(`scheduleDtos[${i}].startAt`).readOnly = true;
+                document.getElementById(`scheduleDtos[${i}].endAt`).readOnly = true;
+            }
+            document.getElementById(`nextDay${i}`).style.visibility='hidden';
+            document.getElementById(`prevDay${i}`).style.visibility='hidden';
+
+            if (arr[i].conflict && arr[i].conflict !== ""){
+                $('#warning').show();
+                $('#suggest').show();
+            }
+
+            if (arr[i].conflict && arr[i].conflict === "next"){
+                document.getElementById(`nextDay${i}`).style.visibility = 'visible';
+            }
+            if (arr[i].conflict && arr[i].conflict === "prev"){
+                document.getElementById(`prevDay${i}`).style.visibility = 'visible';
+            }
+            //     in for loop
+        }
+        displaySubmit();
+    }
+
+    function checkTimeSet(){
+        checkTime = 0;
+        sortingByStartTime(listScheduleDtos);
+        display(listScheduleDtos);
+        $('.timeInput').css('border-color','');
+        for (let i = 0; i < listScheduleDtos.length -1; i++) {
+
+            let endTime1 = Number(listScheduleDtos[i].endAt.substring(0,2))*60
+                + Number(listScheduleDtos[i].endAt.substring(3,5));
+
+            let startTime2 = Number(listScheduleDtos[i+1].startAt.substring(0,2))*60
+                + Number(listScheduleDtos[i+1].startAt.substring(3,5));
+
+            if (startTime2 - endTime1 < 30){
+                checkTime = 1;
+                $('.timeInput').prop('disabled', true);
+                if (listScheduleDtos[i].statusEdit == 'AVAILABLE EDIT'){
+                    document.getElementById(`scheduleDtos[${i}].startAt`).disabled = false;
+                    document.getElementById(`scheduleDtos[${i}].endAt`).disabled = false;
+                }
+                if (listScheduleDtos[i+1].statusEdit == 'AVAILABLE EDIT'){
+                    document.getElementById(`scheduleDtos[${i+1}].startAt`).disabled = false;
+                    document.getElementById(`scheduleDtos[${i+1}].endAt`).disabled = false;
+                }
+                document.getElementById(`scheduleDtos[${i}].endAt`).style.borderColor = 'red';
+                document.getElementById(`scheduleDtos[${i+1}].startAt`).style.borderColor = 'red';
+                document.getElementById(`failedSet${i}`).style.visibility = 'visible';
+                document.getElementById(`failedSet${i+1}`).style.visibility = 'visible';
+                break;
+            }
+        }
+        checkEmptyTime(listScheduleDtos);
+        if (checkTime === 1){
+            $("#messageTimeError").text("invalid time set to schedule ! please check");
+            $("#messageTimeError").css('display',"block");
+            $("#submitSchedule").prop("disabled", true);
+            $('.addFilm').prop('disabled', true);
+        }else {
+            $("#messageTimeError").text("");
+            $("#messageTimeError").css('display',"none");
+            $("#submitSchedule").prop("disabled", false);
+            $('.addFilm').prop('disabled', false);
+            $('.timeInput').prop('disabled', false);
+        }
+    }
+
+    function displaySubmit(){
+        if (lengthOfschedule > 0 && checkTime == 0){
+            $("#submitSchedule").prop("disabled", false);
+        }
+        else {
+            $("#submitSchedule").prop("disabled", true);
+        }
+    }
+    function setStartAt(indexId,value){
+        document.getElementById(`nextDay${indexId}`).style.visibility = 'hidden';
+        $("#submitSchedule").prop("disabled", false);
+        listScheduleDtos[indexId].startAt = value;
+
+        let endTimes = Number(document.getElementById(`scheduleDtos[${indexId}].startAt`).value.substring(0,2))*60
+            + Number(document.getElementById(`scheduleDtos[${indexId}].startAt`).value.substring(3,5))+listScheduleDtos[indexId].duration;
+        let hourEnd = Math.floor(endTimes/60);
+        let minuteEnd = endTimes % 60;
+        let stringHourEnd = "";
+        let stringMinuteEnd = "";
+        if(minuteEnd < 10){
+            stringMinuteEnd = "0"+minuteEnd.toString();
+        } else {
+            stringMinuteEnd = minuteEnd.toString();
+        }
+        if(hourEnd < 10){
+            stringHourEnd = "0" + hourEnd.toString();
+        } else {
+            stringHourEnd = hourEnd.toString();
+        }
+        let warning = "";
+        let id ;
+        listScheduleDtos[indexId].endAt =  stringHourEnd + ":" + stringMinuteEnd ;
+        listScheduleDtos[indexId].conflict = "";
+        if (hourEnd >= 24){
+            warning = "nextDay";
+            id = indexId;
+            listScheduleDtos[indexId].endAt = "00:00";
+            listScheduleDtos[indexId].conflict = "next";
+        }
+        checkTimeSet();
+    }
+
+    function setEndAt(indexId,value){
+        document.getElementById(`prevDay${indexId}`).style.visibility = 'hidden';
+        $("#submitSchedule").css("disabled", true);
+        listScheduleDtos[indexId].endAt = value;
+
+        let starTimes = Number(document.getElementById(`scheduleDtos[${indexId}].endAt`).value.substring(0,2))*60
+            + Number(document.getElementById(`scheduleDtos[${indexId}].endAt`).value.substring(3,5)) - listScheduleDtos[indexId].duration;
+        let hourEnd = Math.floor(starTimes/60);
+        let minuteEnd = starTimes % 60;
+        let stringHourEnd = "";
+        let stringMinuteEnd = "";
+        if(minuteEnd < 10){
+            stringMinuteEnd = "0"+minuteEnd.toString();
+        } else {
+            stringMinuteEnd = minuteEnd.toString();
+        }
+        if(hourEnd < 10){
+            stringHourEnd = "0" + hourEnd.toString();
+        } else {
+            stringHourEnd = hourEnd.toString();
+        }
+
+        listScheduleDtos[indexId].startAt =  stringHourEnd + ":" + stringMinuteEnd ;
+
+        let warning = "";
+        let id;
+        listScheduleDtos[indexId].conflict = "";
+        if (hourEnd < 0 ){
+            warning = "prevDay";
+            id = indexId;
+            listScheduleDtos[indexId].startAt = "00:00";
+            listScheduleDtos[indexId].conflict = "prev";
+        }
+        if (!document.getElementById(`scheduleDtos[${indexId}].endAt`).value){
+            listScheduleDtos[indexId].endAt = "00:00";
+        }
+        checkTimeSet();
+    }
+    function checkEmptyTime(arr){
+        for (let i = 0; i < arr.length; i++){
+            if (arr[i].startAt =='' || arr[i].endAt == ''){
+                document.getElementById(`notEmpty${i}`).style.visibility = 'visible';
+                // $("#notEmpty").css('display','block');
+                checkTime = 1;
+            }else {
+                document.getElementById(`notEmpty${i}`).style.visibility = 'hidden';
+            }
+        }
+    }
+
+    function sortingByStartTime(arr){
+        for (let i = 0; i < arr.length-1; i++) {
+            for (let j=i+1; j< arr.length; j++){
+                let startAt1 = arr[i].startAt.substring(0,5);
+                let startAt2 = arr[j].startAt.substring(0,5);
+                if (startAt1 > startAt2){
+                    const k = arr[j];
+                    arr[j] = arr[i];
+                    arr[i] = k;
+                }
+            }
+        }
+    }
+
+    // view after get list info
+    document.getElementById("city-select").innerHTML='';
+    document.getElementById("city-select").style.display='none';
+    reset();
+    $("#label-city").css("display", "none");
+    $("#label-cinema").css("display", "none");
+    $("#label-room").css("display", "none");
+    $('#getSchedules').prop('disabled',true);
+    $('#getSchedule').hide();
+    if (listCity == null || listCity.length === 0){
+        document.getElementById("city-error").innerText="not have city information"
+    }else {
+        $("#label-city").css("display", "inline");
+        document.getElementById("city-select").style.display='block';
+        for (let i = 0; i < listCity.length; i++) {
+            document.getElementById("city-select").innerHTML +=
+                `<option value="${i}">${listCity[i].cityName}</option>`
+        }
+    }
+    if (listCity && listCity[0].cinemas.length === 0){
+        document.getElementById("cinema-error").innerText="not have cinema information"
+    } else if(listCity && listCity[0].cinemas.length > 0) {
+        $("#label-cinema").css("display", "inline");
+        document.getElementById("cinema-select").style.display='block';
+        for (let i = 0; i < listCity[0].cinemas.length; i++) {
+            document.getElementById("cinema-select").innerHTML +=
+                `<option value="${i}">${listCity[0].cinemas[i].cinemaName}</option>`
+        }
+    }
+    if (listCity && listCity[0].cinemas[0].rooms.length === 0) {
+        document.getElementById("room-error").innerText = "not have room information"
+    }else if (listCity && listCity[0].cinemas[0].rooms.length > 0){
+        $("#label-room").css("display", "inline");
+        document.getElementById("room-select").style.display='block';
+        $('#getSchedule').show();
+        for (let i = 0; i < listCity[0].cinemas[0].rooms.length; i++) {
+            if(listCity[0].cinemas[0].rooms[i].status == true){
+                document.getElementById("room-select").innerHTML +=
+                    `<option value="${listCity[0].cinemas[0].rooms[i].roomId}">${listCity[0].cinemas[0].rooms[i].roomName}</option>`;
+            }
+            else {
+                document.getElementById("room-select").innerHTML +=
+                    `<option disabled value="${listCity[0].cinemas[0].rooms[i].roomId}">${listCity[0].cinemas[0].rooms[i].roomName}</option>`
+            }
+
+        }
+    }
+    if (scheduleWrapper.cityIndex != null){
+        $("#city-select option:selected").prop("selected",false);
+        $("#city-select option[value=" + scheduleWrapper.cityIndex + "]")
+            .prop("selected",true);
+        // $("#city-select select").val(scheduleWrapper.cityIndex).change();
+        // document.getElementById("city-select").value = scheduleWrapper.cityIndex;
+    }
+
+    if (scheduleWrapper.cinemaIndex != null){
+        $("#cinema-select option:selected").prop("selected",false);
+        $("#cinema-select option[value=" + scheduleWrapper.cinemaIndex + "]")
+            .prop("selected",true);
+        // $("#cinema-select select").val(scheduleWrapper.cinemaIndex).change();
+        // document.getElementById("cinema-select").value = scheduleWrapper.cinemaIndex;
+    }
+    if (scheduleWrapper.roomId != null){
+        $("#room-select option:selected").prop("selected",false);
+        $("#room-select option[value=" + scheduleWrapper.roomId + "]")
+            .prop("selected",true);
+
+
+        // $("#room-select select").val(scheduleWrapper.roomId).change();
+        // document.getElementById("room-select").value = scheduleWrapper.roomId;
+    }
+
+    $(document).on('click','#getCity',function (){
+        $.get({
+            url: contextPath + `admin/schedule/cities`
+        }).done(function (listData){
+            document.getElementById("city-select").innerHTML='';
+            $("#label-city").css("display", "none");
+            $("#label-cinema").css("display", "none");
+            $("#label-room").css("display", "none");
+            $('#getSchedules').prop('disabled',true);
+            $('#getSchedule').hide();
+            reset();
+            listCity = listData;
+            if (listData.size === 0){
+                document.getElementById("city-error").innerText="not have city information"
+            }else {
+                $("#label-city").css("display", "inline");
+                document.getElementById("city-select").style.display='block';
+                for (let i = 0; i < listData.length; i++) {
+                    console.log(listData[i].cityId);
+                    document.getElementById("city-select").innerHTML +=
+                        `<option value="${i}">${listData[i].cityName}</option>`
+                }
+            }
+            if (listData[0].cinemas.length === 0){
+                document.getElementById("cinema-error").innerText="not have cinema information"
+            } else {
+                $("#label-cinema").css("display", "inline");
+                document.getElementById("cinema-select").style.display='block';
+                for (let i = 0; i < listData[0].cinemas.length; i++) {
+                    document.getElementById("cinema-select").innerHTML +=
+                        `<option value="${i}">${listData[0].cinemas[i].cinemaName}</option>`
+                }
+            }
+            if (listData[0].cinemas[0].rooms.length === 0) {
+                document.getElementById("room-error").innerText = "not have room information"
+            }else{
+                $("#label-room").css("display", "inline");
+                document.getElementById("room-select").style.display='block';
+                $('#getSchedule').show();
+                for (let i = 0; i < listData[0].cinemas[0].rooms.length; i++) {
+                    if(listData[0].cinemas[0].rooms[i].status == true){
+                        document.getElementById("room-select").innerHTML +=
+                            `<option value="${listData[0].cinemas[0].rooms[i].roomId}">${listData[0].cinemas[0].rooms[i].roomName}</option>`;
+                    }
+                    else {
+                        document.getElementById("room-select").innerHTML +=
+                            `<option disabled value="${listData[0].cinemas[0].rooms[i].roomId}">${listData[0].cinemas[0].rooms[i].roomName}</option>`
+                    }
+                }
+
+            }
+        })
+    })
+
+    $(document).on('change','#city-select',function (city){
+        const cityIndex = city.target.value;
+
+        reset();
+        $("#label-cinema").css("display", "none");
+        $("#label-room").css("display", "none");
+        $('#getSchedules').prop('disabled',true);
+        $('#getSchedule').hide();
+        if (listCity[cityIndex].cinemas.length === 0){
+            document.getElementById("cinema-error").innerText="not have cinema information"
+        } else {
+            $("#label-cinema").css("display", "inline");
+            document.getElementById("cinema-select").style.display='block';
+            for (let i = 0; i < listCity[cityIndex].cinemas.length; i++) {
+                document.getElementById("cinema-select").innerHTML +=
+                    `<option value="${i}">${listCity[cityIndex].cinemas[i].cinemaName}</option>`
+            }
+        }
+        if (listCity[cityIndex].cinemas.length > 0 && listCity[cityIndex].cinemas[0].rooms.length === 0){
+            document.getElementById("room-error").innerText ="not have room information";
+
+        } else if (listCity[cityIndex].cinemas.length > 0 && listCity[cityIndex].cinemas[0].rooms.length > 0){
+
+            $("#label-room").css("display", "inline");
+            document.getElementById("room-select").style.display = 'block';
+            $('#getSchedule').show();
+            for (let i = 0; i < listCity[cityIndex].cinemas[0].rooms.length; i++) {
+                if(listCity[cityIndex].cinemas[0].rooms[i].status == true){
+                    document.getElementById("room-select").innerHTML +=
+                        `<option value="${listCity[cityIndex].cinemas[0].rooms[i].roomId}">${listCity[cityIndex].cinemas[0].rooms[i].roomName}</option>`;
+                }else {
+                    document.getElementById("room-select").innerHTML +=
+                        `<option disabled value="${listCity[cityIndex].cinemas[0].rooms[i].roomId}">${listCity[cityIndex].cinemas[0].rooms[i].roomName}</option>`;
+                }
+            }
+        }
+    })
+    document.getElementById("cinema-select").addEventListener('change',(cinema)=>{
+        const cityIndex = document.getElementById("city-select").value;
+        const cinemaIndex = cinema.target.value;
+        document.getElementById("room-select").innerHTML = '';
+        document.getElementById("room-error").innerText ='';
+        document.getElementById("room-select").style.display='none';
+        $("#label-room").css("display", "none");
+        $('#getSchedules').prop('disabled',true);
+        $('#getSchedule').hide();
+        if (listCity[cityIndex].cinemas[cinemaIndex].rooms.length === 0){
+            document.getElementById("room-error").innerText ="not have room information";
+        }
+        else {
+            $("#label-room").css("display", "inline");
+            document.getElementById("room-select").style.display = 'block';
+            $('#getSchedule').show();
+            for (let i = 0; i < listCity[cityIndex].cinemas[cinemaIndex].rooms.length; i++) {
+                if(listCity[cityIndex].cinemas[cinemaIndex].rooms[i].status == true){
+                    document.getElementById("room-select").innerHTML +=
+                        `<option value="${listCity[cityIndex].cinemas[cinemaIndex].rooms[i].roomId}">${listCity[cityIndex].cinemas[cinemaIndex].rooms[i].roomName}</option>`;
+                }
+                else {
+                    document.getElementById("room-select").innerHTML +=
+                        `<option disabled value="${listCity[cityIndex].cinemas[cinemaIndex].rooms[i].roomId}">${listCity[cityIndex].cinemas[cinemaIndex].rooms[i].roomName}</option>`;
+                }
+
+            }
+        }
+    })
+    // window.location.href="http://google.com.vn"
+
+    function reset(){
+        document.getElementById("cinema-select").style.display='none';
+        document.getElementById("room-select").style.display='none';
+        document.getElementById("cinema-select").innerHTML ='';
+        document.getElementById("room-select").innerHTML = '';
+        document.getElementById("city-error").innerText= '';
+        document.getElementById("cinema-error").innerText='';
+        document.getElementById("room-error").innerText ='';
+    }
+
+    function confirmReset(){
+        const doc = document.getElementById("confirmResetSchedule");
+        doc.style.display= 'block';
+        doc.innerHTML=
+            `<div class="modal-dialog" role="document ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="titleWarning" class="modal-title">Reset Schedule</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="displayNone()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="textWarning" class="text-danger" style="font-size: 1rem">List schedule will reset !!!</p>
+                        <p><b>ARE YOU SURE ?</b></p>
+                    </div>
+                    <div class="modal-footer">
+                    <button id="buttonConfirm" type="button" onclick="listSchedules()" style="color:white;" class="btn btn-primary" >
+                            Confirm Reset
+                    </button>
+                    <button type="button" class="btn btn-danger" style="color: white" data-dismiss="modal" onclick="displayNone()">Close</button>
+                    </div>
+                </div>
+            </div>`
+    }
+    function confirmRemove(index,scheduleId){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display= 'block';
+        doc.innerHTML=
+            `<div class="modal-dialog" role="document ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="titleWarning" class="modal-title">Remove Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="displayNone()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="textWarning" class="text-danger" style="font-size: 1rem">Schedule will be removed in dispay list !!!</p>
+                        <p><b>ARE YOU SURE ?</b></p>
+                    </div>
+                    <div class="modal-footer">
+                    <button id="buttonConfirm" type="button" onclick="removeItem(${index})" style="color:white;;" class="btn btn-primary" >
+                            Confirm Remove
+                    </button>
+                    <button type="button" class="btn btn-danger" style="color: white" data-dismiss="modal" onclick="displayNone()">Close</button>
+                    </div>
+                </div>
+            </div>`
+        if(scheduleId){
+            document.getElementById("textWarning").innerText='Schedule win be deleted in database after submit'
+            document.getElementById("buttonConfirm").innerText='Confirm delete'
+
+        }
+    }
+
+    function confirmSubmit(){
+        const doc = document.getElementById("confirmSubmit");
+        doc.style.display= 'block';
+        doc.innerHTML=
+            `<div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Submit list schedules</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="displayNone()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><b>ARE YOU SURE ?</b></p>
+
+                    </div>
+                    <div class="modal-footer">
+                    <button type="submit" style="color:white;" class="btn btn-primary" >Confirm Submit</button>
+                    <button type="button" class="btn btn-danger" style="color: white" data-dismiss="modal" onclick="displayNone()">Close</button>
+                    </div>
+                </div>
+            </div>`
+    }
+
+    function confirmDelete(id){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display= 'block';
+        doc.innerHTML=
+            `<div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="displayNone()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-danger">Warning! Schedule win delete after confirm !!!</p>
+                        <p><b>ARE YOU SURE ?</b></p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" style="color: white" data-dismiss="modal" onclick="displayNone()">Close</button>
+                    <a href="${contextPath}admin/schedule/delete/${id}?date=${scheduleWrapper.date}&roomId=${scheduleWrapper.roomId}"><button style="color: white" type="button" class="btn btn-danger">Confirm Delete</button></a>
+                    </div>
+                </div>
+            </div>`
+    }
+
+    function displayNone(){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display='none';
+        const doc1 = document.getElementById("confirmSubmit");
+        doc1.style.display='none';
+        const doc2 = document.getElementById("confirmResetSchedule");
+        doc2.style.display = 'none';
+    }
+
+
+
+    // $(document).on('click','#getCity',function (){
+    //     $.get({
+    //         url: `http://localhost:8080/manage-cinema/admin/schedule/cities`
+    //     }).done(function (listData){
+    //         reset();
+    //         if (!listData[0]){
+    //             document.getElementById("city-error").innerText="not have city information"
+    //         }else {
+    //             for (let i = 0; i < listData[0].length; i++) {
+    //                 document.getElementById("city-select").innerHTML +=
+    //                     `<option value="${listData[0][i].cityId}">${listData[0][i].cityName}</option>`
+    //             }
+    //         }
+    //         if (!listData[1]){
+    //             document.getElementById("cinema-error").innerText="not have cinema information"
+    //         } else {
+    //             document.getElementById("cinema-select").style.display='block';
+    //             for (let i = 0; i < listData[1].length; i++) {
+    //                 document.getElementById("cinema-select").innerHTML +=
+    //                     `<option value="${listData[1][i].cinemaId}">${listData[1][i].cinemaName}</option>`
+    //             }
+    //         }
+    //         if (!listData[2]) {
+    //             document.getElementById("room-error").innerText = "not have room information"
+    //         }else{
+    //             document.getElementById("room-select").style.display='block';
+    //             for (let i = 0; i < listData[2].length; i++) {
+    //                 document.getElementById("room-select").innerHTML +=
+    //                     `<option value="${listData[2][i].roomId}">${listData[2][i].roomName}</option>`
+    //             }
+    //         }
+    //     })
+    // })
+    //
+    // $(document).on('change','#city-select',function (city){
+    //     const cityId = city.target.value;
+    //     const cinemaId = document.getElementById("cinema-select").value;
+    //     reset();
+    //     $.get({
+    //         url:`http://localhost:8080/manage-cinema/admin/schedule/location?cityId=${cityId}`
+    //     }).done(function (listData){
+    //         if (!listData[0]){
+    //             document.getElementById("cinema-error").innerText = "not have cinema information";
+    //         } else {
+    //             document.getElementById("cinema-select").style.display='block';
+    //             for (let i = 0; i < listData[0].length; i++) {
+    //                 document.getElementById("cinema-select").innerHTML +=
+    //                     `<option value="${listData[0][i].cinemaId}">${listData[0][i].cinemaName}</option>`
+    //             }
+    //         }
+    //         if (listData[0] && !listData[1]){
+    //             document.getElementById("room-error").innerText = "not have room information";
+    //         } else if (listData[1]) {
+    //             document.getElementById("room-select").style.display = 'block';
+    //             for (let i = 0; i < listData[1].length; i++) {
+    //                 document.getElementById("room-select").innerHTML +=
+    //                     `<option value="${listData[1][i].roomId}">${listData[1][i].roomName}</option>`;
+    //             }
+    //         }
+    //     })
+    // })
+    // document.getElementById("cinema-select").addEventListener('change',(cinema)=>{
+    //     const id = cinema.target.value;
+    //     document.getElementById("room-select").innerHTML = '';
+    //     document.getElementById("room-error").innerText ='';
+    //     document.getElementById("room-select").style.display='none';
+    //     $.get({
+    //         url:`http://localhost:8080/manage-cinema/admin/schedule/location?&cinemaId=${id}`
+    //     }).done(function (listRooms){
+    //         if (!listRooms[0]){
+    //             document.getElementById("room-error").innerText ="not have room information";
+    //         } else {
+    //             document.getElementById("room-select").style.display='block';
+    //             for (let i = 0; i < listRooms[0].length; i++) {
+    //                 document.getElementById("room-select").innerHTML +=
+    //                     `<option value="${listRooms[0][i].roomId}">${listRooms[0][i].roomName}</option>`;
+    //             }
+    //         }
+    //     })
+    // })
+    // // window.location.href="http://google.com.vn"
+    //
+    //
+    // function reset(){
+    //     document.getElementById("cinema-select").style.display='none';
+    //     document.getElementById("room-select").style.display='none';
+    //     document.getElementById("cinema-select").innerHTML ='';
+    //     document.getElementById("room-select").innerHTML = '';
+    //     document.getElementById("city-error").innerText= '';
+    //     document.getElementById("cinema-error").innerText='';
+    //     document.getElementById("room-error").innerText ='';
+    // }
+
+
+
+    //     code single
+    // document.getElementById("formAdd").innerHTML +=
+    //     `<div class="d-flex flex-column align-items-center" id="listMovie${index}">
+    //             <div>
+    //                 <img style="max-width: 75px; max-height: 75px" src="${contextPath+'files/'+listMovieDtos[index].imageSmallUrl}" alt="image film">
+    //             </div>
+    //             <input type="date" hidden readOnly name="date" value="${scheduleWrapper.date}">
+    //             <input type="number" hidden readOnly name="roomId" value="${scheduleWrapper.roomId}">
+    //             <input type="number" hidden readOnly name="scheduleDtos[${lengthOfschedule}].movieId" value="${listMovieDtos[index].movieId}"/>
+    //             <input type="number" hidden readOnly name="scheduleDtos[${lengthOfschedule}].scheduleId" value="${listMovieDtos[index].scheduleId}"/>
+    //             <div>
+    //                 <input type="button" readOnly name="scheduleDtos[${lengthOfschedule}].movieName" value="${listMovieDtos[index].movieName}">
+    //             </div>
+    //             <div>
+    //                 <label th:for="scheduleDtos[${lengthOfschedule}].startAt">start at</label>
+    //                 <input id="scheduleDtos[${lengthOfschedule}].startAt" type="time" name="scheduleDtos[${lengthOfschedule}].startAt"  >
+    //             </div>
+    //             <div>
+    //                 <label for="scheduleDtos[${lengthOfschedule}].endAt">End at</label>
+    //                 <input type="time" id="scheduleDtos[${lengthOfschedule}].endAt" name="scheduleDtos[${lengthOfschedule}].endAt" >
+    //             </div>
+    //                 <select id="select-movieFormat${lengthOfschedule}" name="scheduleDtos[${lengthOfschedule}].movieFormatId"></select>
+    //
+    //             <div class="d-flex">
+    //                 <button type="button" onclick="removeItem(${index})" id="removeId${lengthOfschedule}">remove new list</button></>
+    //                 <p style="color: green">Available edit</p>
+    //             </div>
+    //         </div>`
+    // for (let i = 0; i < listMovieDtos[index].movieFormats.length; i++) {
+    //     document.getElementById(`select-movieFormat${lengthOfschedule}`).innerHTML +=
+    //         `<option value="${listMovieDtos[index].movieFormats[i].movieFormatId}">${listMovieDtos[index].movieFormats[i].movieFormatName}</option>`
+    // }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+@keyframes slideDown {
+    from {
+        height: 0px;
+        opacity: 0;
+    }
+    to {
+        height: 50px;
+        opacity: 1;
+    }
+}

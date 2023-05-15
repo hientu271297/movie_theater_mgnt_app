@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<!-- saved from url=(0109)http://localhost:8080/manage-cinema/admin/schedule/getInfo?date=2023-03-22&cityIndex=0&cinemaIndex=0&roomId=1 -->
+<html lang="en" class="hydrated">
+<script src="chrome-extension://mjnbclmflcpookeapghfhapeffmpodij/injected_content.js"></script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <!-- Required meta tags -->
+    <style data-styles="">
+        ion-icon {
+            visibility: hidden
+        }
+
+        .hydrated {
+            visibility: inherit
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="./Movie-form_files/feather.css">
+    <link rel="stylesheet" href="./Movie-form_files/materialdesignicons.min.css">
+    <link rel="stylesheet" href="./Movie-form_files/themify-icons.css">
+    <link rel="stylesheet" href="./Movie-form_files/typicons.css">
+    <link rel="stylesheet" href="./Movie-form_files/simple-line-icons.css">
+    <link rel="stylesheet" href="./Movie-form_files/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="./Movie-form_files/f.txt">
+    <link rel="stylesheet" href="./Movie-form_files/select.dataTables.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="./Movie-form_files/style.css">
+    <!-- endinject -->
+
+
+    <!-- plugins:js -->
+    <script src="./Movie-form_files/vendor.bundle.base.js.tải xuống"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="./Movie-form_files/Chart.min.js.tải xuống"></script>
+    <script src="./Movie-form_files/bootstrap-datepicker.min.js.tải xuống"></script>
+    <script src="./Movie-form_files/progressbar.min.js.tải xuống"></script>
+
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="./Movie-form_files/off-canvas.js.tải xuống"></script>
+    <script src="./Movie-form_files/hoverable-collapse.js.tải xuống"></script>
+    <script src="./Movie-form_files/template.js.tải xuống"></script>
+    <script src="./Movie-form_files/settings.js.tải xuống"></script>
+    <script src="./Movie-form_files/todolist.js.tải xuống"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <script src="./Movie-form_files/jquery.cookie.js.tải xuống" type="text/javascript"></script>
+    <script src="./Movie-form_files/dashboard.js.tải xuống"></script>
+    <script src="./Movie-form_files/Chart.roundedBarCharts.js.tải xuống"></script>
+    <!-- End custom js for this page-->
+    <!--icon-->
+    <script type="module" src="./Movie-form_files/ionicons.esm.js.tải xuống"></script>
+    <script nomodule="" src="./Movie-form_files/ionicons.js.tải xuống"></script>
+
+
+    <title>Movie-form</title>
+
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!--pro-banner-->
+        <div class="row p-0 m-0 proBanner d-none" id="proBanner">
+            <div class="col-md-12 p-0 m-0">
+                <div class="card-body card-body-padding d-flex align-items-center justify-content-between">
+                    <div class="ps-lg-1">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <p class="mb-0 font-weight-medium me-3 buy-now-text">This is make to show warning or
+                                something</p>
+                            <a href="https://www.bootstrapdash.com/product/star-admin-pro/?utm_source=organic&amp;utm_medium=banner&amp;utm_campaign=buynow_demo"
+                                target="_blank" class="btn me-2 buy-now-btn border-0">Get URL</a>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <a href="https://www.bootstrapdash.com/product/star-admin-pro/"><i
+                                class="mdi mdi-home me-3 text-white"></i></a>
+                        <button id="bannerClose" class="btn border-0 p-0">
+                            <i class="mdi mdi-close text-white me-0"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--navbar-->
+        <nav class="navbar default-layout col-lg-12 col-12 p-0 d-flex align-items-top flex-row fixed-top">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+                <div class="me-3">
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button"
+                        data-bs-toggle="minimize">
+                        <span class="icon-menu"></span>
+                    </button>
+                </div>
+                <div>
+                    <a class="navbar-brand brand-logo"
+                        href="http://localhost:8080/manage-cinema/admin/schedule/index.html">
+
+                    </a>
+                    <a class="navbar-brand brand-logo-mini"
+                        href="http://localhost:8080/manage-cinema/admin/schedule/index.html">
+                        <!--                <img src="images/logo-mini.svg" alt="logo" />-->
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-top">
+                <ul class="navbar-nav">
+                    <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                        <h1 class="welcome-text">Good Morning, <span
+                                class="text-black fw-bold">knighthatay@gmail.com</span></h1>
+                        <h3 class="welcome-sub-text">Your performance summary this week </h3>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item d-none d-lg-block">
+                        <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
+                            <span class="input-group-addon input-group-prepend border-right">
+                                <span class="icon-calendar input-group-text calendar-icon"></span>
+                            </span><input type="text" class="form-control">
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+                        <a class="nav-link" id="UserDropdown"
+                            href="http://localhost:8080/manage-cinema/admin/schedule/getInfo?date=2023-03-22&amp;cityIndex=0&amp;cinemaIndex=0&amp;roomId=1#"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="img-xs rounded-circle" src="./Movie-form_files/ironman.jpg" alt="Profile image">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                            <div class="dropdown-header text-center">
+                                <img class="img-xs rounded-circle" src="./Movie-form_files/ironman.jpg"
+                                    alt="Profile image">
+                                <p class="mb-1 mt-3 font-weight-semibold">Employee</p>
+                                <p class="fw-light text-muted mb-0"></p>
+                            </div>
+                            <a class="dropdown-item" href="http://localhost:8080/manage-cinema/employee/update/1"><i
+                                    class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My
+                                Profile</a>
+                            <a class="dropdown-item" href="http://localhost:8080/manage-cinema/logout"><i
+                                    class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-bs-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!--container-->
+        <div class="container-fluid page-body-wrapper pt-0 proBanner-padding-top">
+            <!--theme wrapper-->
+            <div class="theme-setting-wrapper">
+                <div id="settings-trigger"><i class="ti-settings"></i></div>
+                <div id="theme-settings" class="settings-panel">
+                    <i class="settings-close ti-close"></i>
+                    <p class="settings-heading">SIDEBAR SKINS</p>
+                    <div class="sidebar-bg-options selected" id="sidebar-light-theme">
+                        <div class="img-ss rounded-circle bg-light border me-3"></div>Light
+                    </div>
+                    <div class="sidebar-bg-options" id="sidebar-dark-theme">
+                        <div class="img-ss rounded-circle bg-dark border me-3"></div>Dark
+                    </div>
+                    <p class="settings-heading mt-2">HEADER SKINS</p>
+                    <div class="color-tiles mx-0 px-4">
+                        <div class="tiles success"></div>
+                        <div class="tiles warning"></div>
+                        <div class="tiles danger"></div>
+                        <div class="tiles info"></div>
+                        <div class="tiles dark"></div>
+                        <div class="tiles default"></div>
+                    </div>
+                </div>
+            </div>
+            <!--right side bar-->
+            <div id="right-sidebar" class="settings-panel">
+                <i class="settings-close ti-close"></i>
+                <ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="todo-tab" data-bs-toggle="tab"
+                            href="http://localhost:8080/manage-cinema/admin/schedule/getInfo?date=2023-03-22&amp;cityIndex=0&amp;cinemaIndex=0&amp;roomId=1#todo-section"
+                            role="tab" aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="chats-tab" data-bs-toggle="tab"
+                            href="http://localhost:8080/manage-cinema/admin/schedule/getInfo?date=2023-03-22&amp;cityIndex=0&amp;cinemaIndex=0&amp;roomId=1#chats-section"
+                            role="tab" aria-controls="chats-section">CHATS</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="setting-content">
+                    <div class="tab-pane fade show active scroll-wrapper ps" id="todo-section" role="tabpanel"
+                        aria-labelledby="todo-section">
+                        <div class="add-items d-flex px-3 mb-0">
+                            <form class="form w-100">
+                                <div class="form-group d-flex">
+                                    <input type="text" class="form-control todo-list-input" placeholder="Add To-do">
+                                    <button type="submit" class="add btn btn-primary todo-list-add-btn"
+                                        id="add-task">Add</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="list-wrapper px-3">
+                            <ul class="d-flex flex-column-reverse todo-list">
+                                <li>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="checkbox" type="checkbox">
+                                            Team review meeting at 3.00 PM
+                                            <i class="input-helper"></i></label>
+                                    </div>
+                                    <i class="remove ti-close"></i>
+                                </li>
+                                <li>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="checkbox" type="checkbox">
+                                            Prepare for presentation
+                                            <i class="input-helper"></i></label>
+                                    </div>
+                                    <i class="remove ti-close"></i>
+                                </li>
+                                <li>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="checkbox" type="checkbox">
+                                            Resolve all the low priority tickets due today
+                                            <i class="input-helper"></i></label>
+                                    </div>
+                                    <i class="remove ti-close"></i>
+                                </li>
+                                <li class="completed">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="checkbox" type="checkbox" checked="">
+                                            Schedule meeting for next week
+                                            <i class="input-helper"></i></label>
+                                    </div>
+                                    <i class="remove ti-close"></i>
+                                </li>
+                                <li class="completed">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="checkbox" type="checkbox" checked="">
+                                            Project review
+                                            <i class="input-helper"></i></label>
+                                    </div>
+                                    <i class="remove ti-close"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <h4 class="px-3 text-muted mt-5 fw-light mb-0">Events</h4>
+                        <div class="events pt-4 px-3">
+                            <div class="wrapper d-flex mb-2">
+                                <i class="ti-control-record text-primary me-2"></i>
+                                <span>Feb 11 2018</span>
+                            </div>
+                            <p class="mb-0 font-weight-thin text-gray">Creating component page build a js</p>
+                            <p class="text-gray mb-0">The total number of sessions</p>
+                        </div>
+                        <div class="events pt-4 px-3">
+                            <div class="wrapper d-flex mb-2">
+                                <i class="ti-control-record text-primary me-2"></i>
+                                <span>Feb 7 2018</span>
+                            </div>
+                            <p class="mb-0 font-weight-thin text-gray">Meeting with Alisa</p>
+                            <p class="text-gray mb-0 ">Call Sarah Graves</p>
+                        </div>
+                        <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                            <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                        </div>
+                        <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                            <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                        </div>
+                    </div>
+                    <!-- To do section tab ends -->
+                    <div class="tab-pane fade" id="chats-section" role="tabpanel" aria-labelledby="chats-section">
+                        <div class="d-flex align-items-center justify-content-between border-bottom">
+                            <p class="settings-heading border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Friends</p>
+                            <small
+                                class="settings-heading border-top-0 mb-3 pt-0 border-bottom-0 pb-0 pr-3 fw-normal">See
+                                All</small>
+                        </div>
+                        <ul class="chat-list">
+                            <li class="list active">
+                                <div class="profile"><img src="./Movie-form_files/face1.jpg" alt="image"><span
+                                        class="online"></span></div>
+                                <div class="info">
+                                    <p>Thomas Douglas</p>
+                                    <p>Available</p>
+                                </div>
+                                <small class="text-muted my-auto">19 min</small>
+                            </li>
+                            <li class="list">
+                                <div class="profile"><img src="./Movie-form_files/face2.jpg" alt="image"><span
+                                        class="offline"></span></div>
+                                <div class="info">
+                                    <div class="wrapper d-flex">
+                                        <p>Catherine</p>
+                                    </div>
+                                    <p>Away</p>
+                                </div>
+                                <div class="badge badge-success badge-pill my-auto mx-2">4</div>
+                                <small class="text-muted my-auto">23 min</small>
+                            </li>
+                            <li class="list">
+                                <div class="profile"><img src="./Movie-form_files/face3.jpg" alt="image"><span
+                                        class="online"></span></div>
+                                <div class="info">
+                                    <p>Daniel Russell</p>
+                                    <p>Available</p>
+                                </div>
+                                <small class="text-muted my-auto">14 min</small>
+                            </li>
+                            <li class="list">
+                                <div class="profile"><img src="./Movie-form_files/face4.jpg" alt="image"><span
+                                        class="offline"></span></div>
+                                <div class="info">
+                                    <p>James Richardson</p>
+                                    <p>Away</p>
+                                </div>
+                                <small class="text-muted my-auto">2 min</small>
+                            </li>
+                            <li class="list">
+                                <div class="profile"><img src="./Movie-form_files/face5.jpg" alt="image"><span
+                                        class="online"></span></div>
+                                <div class="info">
+                                    <p>Madeline Kennedy</p>
+                                    <p>Available</p>
+                                </div>
+                                <small class="text-muted my-auto">5 min</small>
+                            </li>
+                            <li class="list">
+                                <div class="profile"><img src="./Movie-form_files/face6.jpg" alt="image"><span
+                                        class="online"></span></div>
+                                <div class="info">
+                                    <p>Sarah Graves</p>
+                                    <p>Available</p>
+                                </div>
+                                <small class="text-muted my-auto">47 min</small>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- chat tab ends -->
+                </div>
+            </div>
+            <!-- side bar offcanvas-->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <!--      check movie-list display-->
+
+
+                        <!--      check movie-list display-->
+
+
+
+                    </li>
+                    <li class="nav-item nav-category">Feature</li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse"
+                            href="http://localhost:8080/manage-cinema/admin/schedule/getInfo?date=2023-03-22&amp;cityIndex=0&amp;cinemaIndex=0&amp;roomId=1#form-add-movie"
+                            aria-expanded="false" aria-controls="#form-add-movie">
+                            <i class="menu-icon mdi mdi-card-text-outline"></i>
+                            <span class="menu-title">Add</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="form-add-movie">
+                            <ul class="nav flex-column sub-menu">
+
+
+
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <!-- main panel-->
+            <div class="main-panel">
+                <!--content-->
+                <div class="content-wrapper">
+                    <!--row-->
+                    <div class="row">
+                        <div class="col grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form action="http://localhost:8080/manage-cinema/admin/schedule/getInfo"
+                                        method="GET">
+
+                                        <p class="card-description">MANAGE SCHEDULE</p>
+
+                                        <button class="btn btn-primary" type="button" id="getCity">
+                                            Get list city
+                                        </button>
+
+                                        <label for="date">choose date</label>
+                                        <input name="date" id="date" type="date" value="2023-03-22">
+                                        <div class="text-danger"></div>
+
+                                        <div class="table-responsive">
+                                            <div class="d-flex">
+                                                <label style="display: inline;" id="label-city" for="city-select">City:
+                                                </label>
+                                                <select name="cityIndex" id="city-select" style="display: block;">
+                                                    <option value="0">HA NOI</option>
+                                                    <option value="1">HAI PHONG</option>
+                                                    <option value="2">QUANG NINH</option>
+                                                    <option value="3">HA NAM</option>
+                                                    <option value="4">HUNG YEN</option>
+                                                    <option value="5">HAI DUONG</option>
+                                                </select>
+                                                <p id="city-error" class="text-danger"></p>
+                                            </div>
+                                            <div class="d-flex">
+                                                <label style="display: inline;" id="label-cinema"
+                                                    for="cinema-select">Cinema: </label>
+                                                <select name="cinemaIndex" id="cinema-select" style="display: block;">
+                                                    <option value="0">NEW TIME</option>
+                                                    <option value="1">NEW TIME 2</option>
+                                                    <option value="2">NEW TIME 3</option>
+                                                    <option value="3">NEW TIME 4</option>
+                                                    <option value="4">NEW TIME 5</option>
+                                                    <option value="5">NEW TIME 6</option>
+                                                    <option value="6">NEW TIME 7</option>
+                                                </select>
+                                                <p id="cinema-error" class="text-danger"></p>
+                                            </div>
+                                            <div class="d-flex">
+                                                <label style="display: inline;" id="label-room" for="room-select">Room:
+                                                </label>
+                                                <select name="roomId" id="room-select" style="display: block;">
+                                                    <option value="1">AAA</option>
+                                                    <option value="2">BBB</option>
+                                                    <option value="3">CCC</option>
+                                                </select>
+                                                <p id="room-error" class="text-danger"></p>
+                                            </div>
+                                        </div>
+                                        <div class="text-danger"></div>
+
+                                        <button type="submit" class="btn btn-primary" id="getSchedule">
+                                            get Schedule and film
+                                        </button>
+                                    </form>
+                                </div>
+                                <h3>list movie</h3>
+
+                                <div class="card-body d-flex flex-wrap justify-content-between">
+
+                                    <div style="width: 18%">
+                                        <div class="d-flex">
+                                            <div>
+                                                <label>Regular</label>
+                                                <input type="checkbox" checked="">
+                                            </div>
+                                            <div>
+                                                <label>3D</label>
+                                                <input type="checkbox" checked="">
+                                            </div>
+                                        </div>
+                                        <p>Iron Man</p>
+                                        <p>2022-03-03</p>
+                                        <p><img style="max-height: 100px; max-width: 100px"
+                                                src="./Movie-form_files/ironman.jpg" alt="film image"></p>
+                                        <button class="addFilm" value="1" onclick="addToSchedule(0)">add to
+                                            schedule</button>
+                                    </div>
+
+                                    <div style="width: 18%">
+                                        <div class="d-flex">
+                                            <div>
+                                                <label>4DX</label>
+                                                <input type="checkbox" checked="">
+                                            </div>
+                                        </div>
+                                        <p>Iron Man e</p>
+                                        <p>2022-03-03</p>
+                                        <p><img style="max-height: 100px; max-width: 100px"
+                                                src="./Movie-form_files/ironman.jpg" alt="film image"></p>
+                                        <button class="addFilm" value="12" onclick="addToSchedule(11)">add to
+                                            schedule</button>
+                                    </div>
+
+                                    <div style="width: 18%">
+                                        <div class="d-flex">
+                                            <div>
+                                                <label>3D</label>
+                                                <input type="checkbox" checked="">
+                                            </div>
+                                        </div>
+                                        <p>Iron Man b</p>
+                                        <p>2022-03-03</p>
+                                        <p><img style="max-height: 100px; max-width: 100px"
+                                                src="./Movie-form_files/ironman.jpg" alt="film image"></p>
+                                        <button class="addFilm" value="13" onclick="addToSchedule(12)">add to
+                                            schedule</button>
+                                    </div>
+
+                                    <div style="width: 18%">
+                                        <div class="d-flex">
+                                            <div>
+                                                <label>IMAX</label>
+                                                <input type="checkbox" checked="">
+                                            </div>
+                                        </div>
+                                        <p>Iron Man d</p>
+                                        <p>2022-03-03</p>
+                                        <p><img style="max-height: 100px; max-width: 100px"
+                                                src="./Movie-form_files/ironman.jpg" alt="film image"></p>
+                                        <button class="addFilm" value="14" onclick="addToSchedule(13)">add to
+                                            schedule</button>
+                                    </div>
+
+                                    <div style="width: 18%">
+                                        <div class="d-flex">
+                                            <div>
+                                                <label>4DX</label>
+                                                <input type="checkbox" checked="">
+                                            </div>
+                                        </div>
+                                        <p>Iron Man k</p>
+                                        <p>2022-03-03</p>
+                                        <p><img style="max-height: 100px; max-width: 100px"
+                                                src="./Movie-form_files/ironman.jpg" alt="film image"></p>
+                                        <button class="addFilm" value="15" onclick="addToSchedule(14)">add to
+                                            schedule</button>
+                                    </div>
+                                </div>
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                      <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                      <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                    </ul>
+                                  </nav>
+
+                                <div class="modal" id="deleteConfirm" role="dialog"></div>
+                                <h3>List Schedule</h3>
+
+                                <div class="text-primary" id="room-choose">room set schedule: AAA</div>
+                                <div class="text-primary" id="date-choose">date set schedule: 2023-03-22</div>
+                                <div class="card-body d-flex">
+
+                                    <form action="http://localhost:8080/manage-cinema/admin/schedule/create"
+                                        method="POST">
+                                        <div id="formAdd" class="d-flex align-items-center flex-wrap">
+                                            <div class="d-flex flex-column align-items-center" id="listMovie">
+                                                <p id="available0"></p>
+                                                <p style="color: green">Available update</p>
+                                                <p></p>
+                                                <div>
+                                                    <img style="max-width: 75px; max-height: 75px"
+                                                        src="./Movie-form_files/ironman.jpg" alt="image film">
+                                                </div>
+                                                <input type="date" hidden="" readonly="" name="date" value="2023-03-22">
+                                                <input type="number" hidden="" readonly="" name="roomId" value="1">
+                                                <input type="number" hidden="" readonly=""
+                                                    name="scheduleDtos[0].movieId" value="1">
+                                                <input type="number" hidden="" readonly=""
+                                                    name="scheduleDtos[0].scheduleId" value="13">
+
+                                                <div>
+                                                    <input type="button" readonly="" name="scheduleDtos[0].movieName"
+                                                        value="Iron Man">
+                                                </div>
+
+                                                <div id="startAt0">
+                                                    <label for="scheduleDtos[0].startAt">start at</label>
+                                                    <input class="timeInput" id="scheduleDtos[0].startAt" type="time"
+                                                        onfocusout="setEndAt(0,this.value)"
+                                                        name="scheduleDtos[0].startAt" value="08:00">
+                                                </div>
+
+                                                <div id="endAt0">
+                                                    <label for="scheduleDtos[0].endAt">End at</label>
+                                                    <input class="timeInput" type="time" id="scheduleDtos[0].endAt"
+                                                        onfocusout="checkEndAt(0,this.value)"
+                                                        name="scheduleDtos[0].endAt" value="10:00">
+                                                </div>
+
+                                                <select id="select-movieFormat0" name="scheduleDtos[0].movieFormatId">
+                                                    <option value="1">
+                                                        Regular
+                                                    </option>
+                                                    <option selected="" value="2">
+                                                        3D
+                                                    </option>
+                                                </select>
+
+                                                <div class="d-flex">
+                                                    <a id="removeId0"> <button type="button" class="btn-warning"
+                                                            onclick="confirmRemove(0)" id="removeItem0">delete</button>
+                                                        <button type="button" class="btn-danger"
+                                                            onclick="deleteItem(13)">delete direct</button></a>
+                                                    <p id="notEmpty0" class="text-danger" >not
+                                                        empty</p>
+                                                    <p id="failedSet0" class="text-danger">Check
+                                                        time</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-column align-items-center" id="listMovie">
+                                                <p id="available1"></p>
+                                                <p style="color: red">Can not edit</p>
+                                                <p></p>
+                                                <div>
+                                                    <img style="max-width: 75px; max-height: 75px"
+                                                        src="./Movie-form_files/ironman.jpg" alt="image film">
+                                                </div>
+
+                                                <input type="date" hidden="" readonly="" name="date" value="2023-03-22">
+                                                <input type="number" hidden="" readonly="" name="roomId" value="1">
+                                                <input type="number" hidden="" readonly=""
+                                                    name="scheduleDtos[1].movieId" value="1">
+                                                <input type="number" hidden="" readonly=""
+                                                    name="scheduleDtos[1].scheduleId" value="7">
+
+                                                <div>
+                                                    <input type="button" readonly="" name="scheduleDtos[1].movieName"
+                                                        value="Iron Man">
+                                                </div>
+
+                                                <div id="startAt1">
+                                                    <div>
+                                                        <label for="scheduleDtos[1].startAt">start at</label>
+                                                        <input id="scheduleDtos[1].startAt" class="timeInput"
+                                                            type="time" readonly="" name="scheduleDtos[1].startAt"
+                                                            value="11:00">
+                                                    </div>
+                                                </div>
+                                                <div id="endAt1">
+                                                    <div>
+                                                        <label for="scheduleDtos[1].endAt">end at</label>
+                                                        <input id="scheduleDtos[1].endAt" class="timeInput" type="time"
+                                                            readonly="" name="scheduleDtos[1].endAt" value="13:00">
+                                                    </div>
+                                                </div>
+                                                <select id="select-movieFormat1" name="scheduleDtos[1].movieFormatId">
+                                                    <option selected="" value="1">
+                                                        Regular
+                                                    </option>
+                                                    <option disabled="" value="2">
+                                                        3D
+                                                    </option>
+                                                </select>
+
+                                                <div class="d-flex">
+                                                    <a id="removeId1"></a>
+                                                    <p id="notEmpty1" class="text-danger">not
+                                                        empty</p>
+                                                    <p id="failedSet1" class="text-danger" >Check
+                                                        time</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column align-items-center" id="listMovie">
+                                                <p id="available2"></p>
+                                                <p style="color: green">Available update</p>
+                                                <p></p>
+                                                <div>
+                                                    <img style="max-width: 75px; max-height: 75px"
+                                                        src="./Movie-form_files/ironman.jpg" alt="image film">
+                                                </div>
+                                                <input type="date" hidden="" readonly="" name="date" value="2023-03-22">
+                                                <input type="number" hidden="" readonly="" name="roomId" value="1">
+                                                <input type="number" hidden="" readonly=""
+                                                    name="scheduleDtos[2].movieId" value="1">
+                                                <input type="number" hidden="" readonly=""
+                                                    name="scheduleDtos[2].scheduleId" value="14">
+                                                <div>
+                                                    <input type="button" readonly="" name="scheduleDtos[2].movieName"
+                                                        value="Iron Man">
+                                                </div>
+                                                <div id="startAt2">
+                                                    <label for="scheduleDtos[2].startAt">start at</label>
+                                                    <input class="timeInput" id="scheduleDtos[2].startAt" type="time"
+                                                        onfocusout="setEndAt(2,this.value)"
+                                                        name="scheduleDtos[2].startAt" value="13:30">
+                                                </div>
+                                                <div id="endAt2">
+                                                    <label for="scheduleDtos[2].endAt">End at</label>
+                                                    <input class="timeInput" type="time" id="scheduleDtos[2].endAt"
+                                                        onfocusout="checkEndAt(2,this.value)"
+                                                        name="scheduleDtos[2].endAt" value="17:00">
+                                                </div>
+                                                <select id="select-movieFormat2" name="scheduleDtos[2].movieFormatId">
+                                                    <option value="1">
+                                                        Regular
+                                                    </option>
+                                                    <option selected="" value="2">
+                                                        3D
+                                                    </option>
+                                                </select>
+
+                                                <div class="d-flex">
+                                                    <a id="removeId2"> <button type="button" class="btn-warning"
+                                                            onclick="confirmRemove(2)" id="removeItem2">delete</button>
+                                                        <button type="button" class="btn-danger"
+                                                            onclick="deleteItem(14)">delete direct</button></a>
+                                                    <p id="notEmpty2" class="text-danger" >not
+                                                        empty</p>
+                                                    <p id="failedSet2" class="text-danger" >Check
+                                                        time</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-column align-items-center" id="listMovie">
+                                                <p id="available3">
+                                                <p style="color: green">Available update</p>
+                                                </p>
+                                                <div>
+                                                    <img style="max-width: 75px; max-height: 75px"
+                                                        src="./Movie-form_files/ironman.jpg" alt="image film">
+                                                </div>
+                                                <input type="date" hidden="" readonly="" name="date" value="2023-03-22">
+                                                <input type="number" hidden="" readonly="" name="roomId" value="1">
+                                                <input type="number" hidden="" readonly=""
+                                                    name="scheduleDtos[3].movieId" value="1">
+                                                <input type="number" hidden="" readonly=""
+                                                    name="scheduleDtos[3].scheduleId" value="15">
+                                                <div>
+                                                    <input type="button" readonly="" name="scheduleDtos[3].movieName"
+                                                        value="Iron Man">
+                                                </div>
+                                                <div id="startAt3">
+                                                    <label for="scheduleDtos[3].startAt">start at</label>
+                                                    <input class="timeInput" id="scheduleDtos[3].startAt" type="time"
+                                                        onfocusout="setEndAt(3,this.value)"
+                                                        name="scheduleDtos[3].startAt" value="17:30">
+                                                </div>
+                                                <div id="endAt3">
+                                                    <label for="scheduleDtos[3].endAt">End at</label>
+                                                    <input class="timeInput" type="time" id="scheduleDtos[3].endAt"
+                                                        onfocusout="checkEndAt(3,this.value)"
+                                                        name="scheduleDtos[3].endAt" value="21:00">
+                                                </div>
+                                                <select id="select-movieFormat3" name="scheduleDtos[3].movieFormatId">
+                                                    <option value="1">
+                                                        Regular
+                                                    </option>
+                                                    <option selected="" value="2">
+                                                        3D
+                                                    </option>
+                                                </select>
+
+                                                <div class="d-flex">
+                                                    <a id="removeId3"> <button type="button" class="btn-warning"
+                                                            onclick="confirmRemove(3)" id="removeItem3">delete</button>
+                                                        <button type="button" class="btn-danger"
+                                                            onclick="deleteItem(15)">delete direct</button></a>
+                                                    <p id="notEmpty3" class="text-danger">not empty</p>
+                                                    <p id="failedSet3" class="text-danger">Check time</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button id="submitSchedule">submit</button>
+                                    </form>
+                                </div>
+                                <h3 id="messageTimeError" class="text-danger"></h3>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--footers-->
+                    <footer class="footer">
+                        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block"> <a
+                                    href="https://www.bootstrapdash.com/" target="_blank">About FJB03</a> from FA
+                                .</span>
+                            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021.
+                                All rights reserved.</span>
+                        </div>
+                    </footer>
+
+                </div>
+                <!-- main panel ends -->
+            </div>
+            <!-- page body wrapper ends -->
+        </div>
+        <!-- container scroller -->
+
+    </div>
+    <script src="./Movie-form_files/jquery.min.js.tải xuống"></script>
+    <script>
+
+
+
+    </script>
+
+
+</body>
+<script>document.documentElement.style.display = '' </script>
+
+</html>

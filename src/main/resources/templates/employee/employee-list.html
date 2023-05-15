@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Employee-view</title>
+    <th:block th:insert="fragment/head" />
+    <link rel="stylesheet" th:href="@{/styles/animation.css}">
+</head>
+<body>
+<div class="container-scroller">
+
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+        <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper" />
+        <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar" />
+        <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+        <!-- main panel-->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <!--row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="home-tab">
+                            <!--tab list-->
+                            <th:block th:insert="fragment/tablist" />
+                            <div class="tab-content tab-content-basic">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Employee List</h4>
+
+                                        <!--    modal confirm delete-->
+                                        <div class="modal"  id="deleteConfirm"  role="dialog"></div>
+
+                                        <!--    result action-->
+                                        <div onclick="display()" id="result" class="alert alert-success"
+                                             style="width: fit-content"
+                                             role="alert"
+                                             th:if="${result}"
+                                             th:text="${result}">
+                                        </div>
+
+                                        <!-- View List -->
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">No</th>
+                                                    <th scope="col">Avatar</th>
+                                                    <th scope="col">
+                                                            <span th:if="${sort != null && sort.equalsIgnoreCase('-fullName')}"><ion-icon name="caret-down-outline"></ion-icon>
+                                                            </span>
+                                                        <span th:if="${sort != null && sort.equalsIgnoreCase('fullName')}"><ion-icon name="caret-up-outline"></ion-icon>
+                                                            </span>
+                                                        <a style="text-decoration: none; color: black"
+                                                           th:href="@{${sort == null ? '/employee?sort=fullName&q='+(keyword != null ? keyword : '')+'&filter='+(filter != null ? filter : '')
+                                                                : (sort.equalsIgnoreCase('fullName')
+                                                                    ? '/employee?sort=-fullName&q='+(keyword != null ? keyword : '')+'&filter='+(filter != null ? filter : '')
+                                                                    : '/employee?q='+(keyword != null ? keyword : '')+'&filter='+(filter != null ? filter : ''))}}">
+                                                            Full Name
+                                                        </a>
+                                                    </th>
+                                                    <th scope="col">Date of birth</th>
+                                                    <th scope="col">Gender</th>
+                                                    <th scope="col">Email</th>
+                                                    <th scope="col">Phone number</th>
+                                                    <th scope="col">Address</th>
+                                                    <th scope="col">Register date</th>
+                                                    <th scope="col">Action</th>
+
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="e,i : ${employeeList}">
+                                                    <td th:text="${i.count}"></td>
+                                                    <td><img th:if="${e.getAvatar()}" alt="avatar" th:src="@{'/files/'+ ${e.getAvatar()}}"></td>
+                                                    <td >
+                                                        <p style="width: 200px;white-space: break-spaces; word-wrap: break-word;margin: 0;" th:text="${e.getFullName()}"></p>
+                                                    </td>
+                                                    <td th:text="${e.getDateOfBirth()}"></td>
+                                                    <td th:text="${e.getGender()}"></td>
+                                                    <td style="width: 200px;white-space: break-spaces; word-wrap: break-word;margin: 0;" th:text="${e.getEmail()}"></td>
+                                                    <td th:text="${e.getPhone()}"></td>
+                                                    <td style="width: 200px;white-space: break-spaces; word-wrap: break-word;margin: 0;" th:text="${e.getAddress()}"></td>
+                                                    <td th:text="${e.getCreatedDate()}"></td>
+
+                                                    <td>
+                                                        <a class="text-decoration-none" th:href="@{/employee/update/{id}(id = ${e.getEmployeeId()})}"> <ion-icon name="create-outline" class="btn btn-warning m-0 "></ion-icon> </a>
+                                                        <a class="text-decoration-none" th:if="${!#session.getAttribute('email').equals(e.email)}"
+                                                           th:attr="onclick=|confirmDelete(${e.getEmployeeId()},${pageNumber},${size},'${keyword}','${filter}','${sort}')|">
+                                                            <ion-icon class="btn btn-danger m-0 " name="trash-outline"></ion-icon>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <nav aria-label="Page navigation example mt-5" style="margin-top: 18px" th:if="${totalPage > 1}">
+                                            <ul class="pagination">
+
+
+                                                <!-- First button-->
+                                                <li class="page-item" th:if="${pageNumber} - 3 > 0">
+                                                    <a class="page-link" th:href="@{/employee(pageNumber = 0, size=${size}, q = ${keyword}, filter = ${filter}, sort=${sort})}" th:text="'First'"></a>
+                                                </li>
+                                                <!--check button previous-->
+                                                <li th:classappend="${pageNumber} <= 0 ? 'disabled page-item' : 'page-item'">
+                                                    <a class="page-link" th:href="@{/employee(pageNumber = ${pageNumber -1}, size=${size}, q = ${keyword}, filter = ${filter}, sort=${sort})}" aria-label="Previous">
+                                                        <span aria-hidden="true"><i class="fas fa-angle-left"></i>&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" th:if="${pageNumber} - 3 > 0"><span class="page-link"> ... </span></li>
+
+                                                <!--total page <= 5   -->
+                                                <li class="page-item" th:if="${totalPage <= 5}" th:each="i : ${#numbers.sequence(0,totalPage - 1)}">
+                                                    <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'" th:href="@{/employee(pageNumber = ${i}, size=${size}, q = ${keyword}, filter = ${filter}, sort=${sort})}" th:text="${i+1}"></a>
+                                                </li>
+
+                                                <!-- total page > 5 and page number < 2-->
+                                                <li class="page-item" th:if="${totalPage > 5 && pageNumber < 2}" th:each="i : ${#numbers.sequence(0,4)}">
+                                                    <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'" th:href="@{/employee(pageNumber = ${i}, size=${size},q = ${keyword}, filter = ${filter}, sort=${sort})}" th:text="${i+1}"></a>
+                                                </li>
+
+                                                <!-- total page > 5 and page number >=2 and page < total page - 2 -->
+                                                <li class="page-item" th:if="${totalPage > 5 && pageNumber >= 2 && pageNumber < totalPage - 2}" th:each="i : ${#numbers.sequence(0,4)}">
+                                                    <a class="page-link" th:style="${i == 2} ? 'background-color: #0d6efd; color: white'" th:href="@{/employee(pageNumber = ${pageNumber - 2 + i}, size=${size}, q = ${keyword}, filter = ${filter}, sort=${sort})}" th:text="${pageNumber - 1 + i}"></a>
+                                                </li>
+
+                                                <!-- total page > 5 and page number >=2 and page >= total page - 2 -->
+                                                <li class="page-item" th:if="${totalPage > 5 && pageNumber >= 2 && pageNumber >= totalPage - 2}" th:each="i : ${#numbers.sequence(totalPage - 5, totalPage - 1)}">
+                                                    <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'" th:href="@{/employee(pageNumber = ${i}, size=${size}, q = ${keyword}, filter = ${filter}, sort=${sort})}" th:text="${i+1}"></a>
+                                                </li>
+                                                <!--check button next-->
+                                                <li class="page-item" th:if="${pageNumber + 4 <= totalPage - 1}"><span class="page-link"> ... </span></li>
+
+                                                <li th:if="${totalPage > 1}" th:class="(${pageNumber} >= (${totalPage}-1)) ? 'disabled page-item' : 'page-item'">
+                                                    <a class="page-link" th:href="@{/employee(pageNumber = ${pageNumber +1}, size=${size},q = ${keyword}, filter = ${filter}, sort=${sort})}" aria-label="Next">
+                                                        <span aria-hidden="true"><i class="fas fa-angle-right"></i>&raquo;</span>
+                                                    </a>
+                                                </li>
+                                                <!--last button-->
+                                                <li class="page-item" th:if="${pageNumber + 4 <= totalPage - 1}">
+                                                    <a class="page-link" th:href="@{/employee(pageNumber = ${totalPage -1}, size=${size},q = ${keyword}, filter = ${filter}, sort=${sort})}" th:text="'Last'"></a>
+                                                </li>
+
+
+                                            </ul>
+                                        </nav>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--footers-->
+            <th:block th:insert="fragment/footers" />
+        </div>
+
+    </div>
+    <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+<script th:inline="javascript">
+    const contextPath = /*[[@{/}]]*/ '';
+    const myTimeout = setTimeout(display, 5000);
+
+    function display(){
+        const x = document.getElementById("result");
+        if(x){
+            x.style.display = "none";
+        }
+    }
+    const alertDiv = document.getElementById("result");
+    alertDiv.style.animation = "slideDown 2s ease-in-out";
+    function confirmDelete(id,pageNumber,size,q,filter, sort){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display= 'block';
+        doc.innerHTML=
+            `<div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="displayNone()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-danger">Employee will be Deleted</p>
+                        <p><b>ARE YOU SURE ?</b></p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" style="color: white" class="btn btn-primary" >
+                        <a style="text-decoration: none; color: white" href="${contextPath}employee/admin/delete/${id}?pageNumber=${pageNumber}&size=${size}&q=${q}?filter=${filter}?sort=${sort}">
+                            Confirm Delete
+                        </a>
+                    </button>
+                    <button type="button" style="color: white" class="btn btn-danger" data-dismiss="modal" onclick="displayNone()">Close</button>
+
+                    </div>
+                </div>
+        </div>`
+    }
+
+    function changeTypeSearch(){
+        const filter = $('#filter').val();
+        if (filter === 'email'){
+            $('#search-content').prop('type','email');
+        }
+        else if(filter === 'dateOfBirth'){
+            $('#search-content').prop('type','date');
+        }else {
+            $('#search-content').prop('type','text');
+        }
+    }
+    function displayNone(){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display='none';
+    }
+</script>
+</body>
+</html>

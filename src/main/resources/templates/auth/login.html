@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Login</title>
+
+    <link rel="stylesheet" th:href="@{/styles/loginStyle.css}">
+</head>
+
+<body>
+
+<section>
+
+    <div class="form-box">
+
+        <div class="form-value">
+
+            <form method="post"
+            th:action="@{/authentication}" th:object="${userLoginDto}">
+
+                <span id="login-element">Employee Login</span>
+                <div class="inputbox">
+
+                    <ion-icon name="person-outline"></ion-icon>
+
+                    <input id="email" th:field="*{email}" type="text" required />
+
+                    <label for="email">Email</label>
+
+                </div>
+
+                <div class="inputbox">
+
+<!--                    <ion-icon id="eye" name="eye-outline"></ion-icon>-->
+                    <input id="password" th:field="*{password}" type="password" required />
+                    <label for="password">Password</label>
+
+                </div>
+                <p class="text-danger" th:if="${#httpServletRequest.getParameter('error') != null}" >Login information is incorrect!</p>
+
+
+                <div class="forget">
+
+                    <label for="remember-me">
+                        <input id="remember-me" name="remember-me" type="checkbox"/>Remember me
+                    </label>
+
+                </div>
+
+                <button type="submit" >Login</button>
+
+                <div class="register">
+
+                    <p><a th:href="@{/forget-password}">Forget Password ?</a></p>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!--<script>-->
+<!--    const eye = document.getElementById('eye');-->
+<!--    eye.addEventListener('click', function() {-->
+<!--        if (eye.getAttribute('name')=== 'eye-outline'){-->
+<!--            eye.setAttribute('name', 'eye-off-outline');-->
+<!--            document.getElementById('password').setAttribute('type','text');-->
+<!--        }else {-->
+<!--            eye.setAttribute('name', 'eye-outline');-->
+<!--            document.getElementById('password').setAttribute('type','password');-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragment/head" />
+    <title>Movie-form</title>
+
+</head>
+<body>
+<div class="container-scroller">
+    <!--pro-banner-->
+<!--    <th:block th:insert="fragment/probanner" />-->
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+        <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper" />
+        <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar" />
+        <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+        <!-- main panel-->
+        <div class="main-panel">
+            <!--content-->
+            <div class="content-wrapper">
+                <!--row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h1 class="card-title text-center fw-bold text-danger text-uppercase " style="font-size: 2rem" th:utext="${title}"></h1>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="fw-bold card-description">
+                                            Error code : <code style="font-size: 1.5rem" th:text="${code}"></code>
+                                        </h5>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th style="font-size: large" th:utext="${message}"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody >
+                                                <tr>
+                                                    <td>
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!--footers-->
+            <th:block th:insert="fragment/footers" />
+
+        </div>
+        <!-- main panel ends -->
+    </div>
+    <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+
+
+
+</body>
+
+</html>

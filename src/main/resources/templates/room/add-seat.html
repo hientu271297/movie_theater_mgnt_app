@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seat settings</title>
+    <link rel="stylesheet" th:href="@{/styles/seat-setting.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body style="background-color: #ffffffff">
+<h1 style="text-align: center; margin-top: 20px;">SEAT SETTINGS</h1>
+<div class="screen">Screen</div>
+<div class="seats">
+    <table>
+        <tbody class="room" th:id="${room.roomId}">
+        <tr th:each="seatColumn : ${seatColumns}">
+            <td class="seat" th:each="seatRow : ${#numbers.sequence(1,rows)}"
+                th:text="${seatColumn.toString()+seatRow}"
+                th:id="${seatColumn.toString()+seatRow}"
+                th:room-id="${room.roomId}"
+                th:seat-name="${seatColumn.toString()+seatRow}"
+            ></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="note">
+    <table>
+        <tbody>
+        <tr>
+            <td class="note-seat" style="background-color: gray; color: #fff;"></td>
+            <td>: Broken</td>
+            <td class="note-seat" style="border:3px solid green; color: green;"></td>
+            <td>: Normal</td>
+            <td class="note-seat" style="border:3px solid red; color: red;"></td>
+            <td>: Vip</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="margin-left: 200px;">
+        <button type="button" class="btn btn-primary d-block w-100 mb-2" onclick="addSeat()">Save seat</button>
+        <a class="btn btn-secondary w-100" th:href="@{/admin/room}">Back to List</a>
+    </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function () {
+        const idRoom = $('.room').attr("id")
+        $.post({
+            url: 'http://localhost:8080/manage-cinema/seat',
+            data: {id: idRoom},
+        })
+            .done(function (response) {
+                console.log(typeof response);
+
+                for (const item of response) {
+                    const seatId = $(`#${item.seatName}`)
+                    seatId.attr('seat-type', item.seatType);
+                    const seatElement = seatId[0];
+                    if (item.seatType === 1) {
+                        seatElement.classList.add('normal')
+                    } else if (item.seatType === 2) {
+                        seatElement.classList.add('vip')
+                    } else {
+                        seatElement.classList.add('broken')
+                    }
+
+                }
+            })
+            .fail(function (xhr, status, error) {
+                console.log(xhr.responseText);
+            });
+
+    })
+
+    const seatList = document.querySelectorAll('.seat');
+
+    let selectedSeats = [];
+
+    for (let i = 0; i < seatList.length; i++) {
+        seatList[i].addEventListener('click', function () {
+            if (this.classList.contains('normal')) {
+                this.classList.remove('normal')
+                this.classList.add('vip')
+                this.setAttribute('seat-type', '2');
+            } else if (this.classList.contains('vip')) {
+                this.classList.remove('vip')
+                this.classList.add('broken')
+                this.setAttribute('seat-type', '3');
+            } else {
+                this.classList.remove('broken')
+                this.classList.add('normal')
+                this.setAttribute('seat-type', '1');
+            }
+        });
+    }
+
+    function addSeat() {
+        for (let i = 0; i < seatList.length; i++) {
+            const seat = {
+                roomId: seatList[i].getAttribute('room-id'),
+                seatName: seatList[i].getAttribute('seat-name'),
+                seatType: seatList[i].getAttribute('seat-type')
+            };
+            selectedSeats.push(seat);
+        }
+        addEmployee(selectedSeats);
+    }
+
+    const addEmployee = function (payLoad) {
+        $.post({
+            url: 'http://localhost:8080/manage-cinema/seat/add-seat',
+            data: JSON.stringify(payLoad),
+            contentType: 'application/json; charset=utf-8',
+        })
+            .done(function (response) {
+                console.log(response);
+                window.location.replace("http://localhost:8080/manage-cinema/admin/room?message=Save+Room+Success+!")
+            })
+            .fail(function (xhr, status, error) {
+                console.log(xhr.responseText);
+            });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+* {
+
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
+
+    padding: 0;
+
+}
+a{
+    text-decoration: none;
+}
+
+section {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 100vh;
+
+    width: 100%;
+
+    background: #00ff00;
+
+    /*background: url(https://cinerama.qodeinteractive.com/wp-content/uploads/2018/05/landing-slisder-img-2.jpg) no-repeat;*/
+    background: url(https://www.abc4.com/wp-content/uploads/sites/4/2018/12/movie-popcorn-entertainment_1530120399830_382133_ver1.0_47007319_ver1.0.jpg) no-repeat;
+
+    background-position: center;
+
+    background-size: cover;
+
+
+
+}
+
+.form-box {
+
+    position: relative;
+
+    width: 400px;
+
+    height: 450px;
+
+    background: white;
+    margin-left: 50%;
+
+    /*border: 2px solid rgba(255, 255, 255, 0.5);*/
+
+    /*opacity: 0.7;*/
+
+    border-radius: 10px;
+
+    backdrop-filter: blur(40px);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    box-shadow: 1px 1px 5px 1px brown;
+
+}
+
+#login-element {
+
+    font-size: 2em;
+
+    color: black;
+
+    text-align: center;
+
+}
+
+.inputbox {
+
+    position: relative;
+
+    margin: 30px 0;
+
+    width: 310px;
+
+    border-bottom: 2px solid black;
+
+}
+
+.inputbox label {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 5px;
+
+    transform: translateY(-50%);
+
+    color: black;
+
+    font-size: 1em;
+
+    pointer-events: none;
+
+    transition: 0.5s;
+
+}
+
+input:focus~label,
+
+input:valid~label {
+
+    top: -5px;
+
+}
+
+.inputbox input {
+
+    width: 100%;
+
+    height: 50px;
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
+
+    font-size: 1em;
+
+    padding: 0 35px 0 5px;
+
+    color: black;
+
+}
+
+.inputbox ion-icon {
+
+    position: absolute;
+
+    right: 8px;
+
+    color: black;
+
+    font-size: 1.2em;
+
+    top: 20px;
+
+}
+
+.forget {
+
+    margin: 25px 0 15px;
+
+    font-size: 0.9em;
+
+    color: black;
+
+    display: flex;
+
+    justify-content: center;
+
+
+}
+
+.forget label input {
+
+    margin-right: 3px;
+
+}
+
+.forget label a {
+
+    color: black;
+
+    text-decoration: none;
+
+}
+
+.forget label a:hover {
+
+    text-decoration: underline;
+
+}
+
+button {
+
+    width: 100%;
+
+    height: 40px;
+
+    border-radius: 40px;
+
+    background: black;
+
+    border: none;
+
+    outline: none;
+
+    cursor: pointer;
+
+    font-size: 1em;
+
+    font-weight: 600;
+
+    transition: .5s;
+
+    color: white;
+}
+
+.register {
+
+    font-size: .9em;
+
+    color: black;
+
+    text-align: center;
+
+    margin: 25px 0 10px;
+
+}
+
+.register p a {
+
+    text-decoration: none;
+
+    color: black;
+
+    font-weight: 600;
+
+}
+
+.register p a:hover {
+
+    text-decoration: underline;
+
+}
+
+button:hover {
+
+    background-color: white;
+    border: 2px solid black;
+
+    color: black;
+
+}
+
+button:focus {
+
+    background-color: rgba(255, 255, 255, 0.2);
+
+    color: white;
+
+}
+.text-danger{
+    color: red;
+}
+.error-resetPassword{
+    color: black;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
+input:-webkit-autofill{
+    -webkit-text-fill-color: black !important;
+}

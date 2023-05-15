@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <th:block th:insert="fragment/head" />
+  <title>Room-form</title>
+</head>
+<body>
+<div class="container-scroller">
+
+  <!--navbar-->
+  <th:block th:insert="fragment/navbar" />
+  <!--container-->
+  <div class="container-fluid page-body-wrapper">
+    <!--theme wrapper-->
+    <th:block th:insert="fragment/themewrapper" />
+    <!--right side bar-->
+    <th:block th:insert="fragment/rightsidebar" />
+    <!-- side bar offcanvas-->
+    <th:block th:insert="fragment/sidebaroffcanvas" />
+    <!-- main panel-->
+    <div class="main-panel">
+      <!--content-->
+      <div class="content-wrapper">
+        <!--row-->
+        <div class="row">
+          <div class="col grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+
+                <p class="card-description">
+                  Add Room
+                </p>
+                <form class="m-4" enctype="multipart/form-data"
+                      th:action="@{/admin/room/save}" method="post" th:object="${roomDto}">
+                  <!-- room name -->
+                  <div class="form-group"> <label for="roomName">Room name</label>
+                    <input th:field="*{roomId}" hidden="hidden">
+                    <input th:field="*{roomName}"
+                           type="text"
+                           class="form-control"
+                           id="roomName"
+                           placeholder="Enter room name"
+                    />
+                    <p th:errors="*{roomName}" style="color: red"></p>
+                  </div>
+
+                  <div class="form-group">
+                    <input type="radio"
+                           th:field="*{status}"
+                           id="active"
+                           value="true"
+                    />
+                    <label for="active">Active</label>
+                    <br>
+                    <input type="radio"
+                           th:field="*{status}"
+                           id="in-active"
+                           value="false"
+                    />
+                    <label for="in-active">In-Active</label>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="roomType">Room Type</label><br>
+                    <select id="roomType" name="roomTypeId" class="form-select">
+                      <option th:each="item : ${listRoomType}"
+                              th:text="${item.getRoomTypeName()}"
+                              th:value="${item.getRoomTypeId()}"
+                              th:selected="${roomDto.roomType != null && item.getRoomTypeId() == roomDto.roomType.getRoomTypeId()}"
+                      ></option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="cinema">Cinema</label><br>
+                    <select id="cinema" name="cinemaId" class="form-select">
+                      <option th:each="item : ${listCinema}"
+                              th:text="${item.getCinemaName()}"
+                              th:value="${item.getCinemaId()}"
+                              th:selected="${roomDto.cinema != null && item.getCinemaId() == roomDto.cinema.getCinemaId()}"
+                      ></option>
+                    </select>
+                  </div>
+                  <!--    modal confirm -->
+                  <div class="modal"  id="confirm"  role="dialog"></div>
+                  <!--  Button  Reset and Submit-->
+                  <div class="form-group">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Submit</button>
+                    <button type="reset" class="btn btn-danger">Reset</button>
+                  </div>
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Confirm Save room</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p class="text-danger">Room will be Save</p>
+                          <p><b>ARE YOU SURE ?</b></p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary text-white">Yes</button>
+                          <a type="button" class="btn btn-danger text-white" data-dismiss="modal">No</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--footers-->
+      <th:block th:insert="fragment/footers" />
+
+    </div>
+    <!-- main panel ends -->
+  </div>
+  <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+
+
+</body>
+
+</html>

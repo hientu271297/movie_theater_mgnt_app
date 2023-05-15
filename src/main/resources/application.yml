@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/movie_theater_mock_project?createDatabaseIfNotExist=true
+    username: root
+    password: 123456
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+server:
+  port: 8080
+  servlet:
+      context-path : '/manage-cinema'
+
+app:
+  file:
+    location: 'D:\mock-image-movie\static-resource'
+  send-mailjet:
+    api-key: 'a8dfeaac2f598a9966f14867d062aa5e'
+    secret-key: '1593b265893db7489df53202f8876eeb'
+    mailJetVersion: 'v3.1'

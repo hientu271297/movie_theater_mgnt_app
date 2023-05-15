@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Movie</title>
+    <th:block th:insert="fragment/head"/>
+    <link rel="stylesheet" th:href="@{/styles/seat-setting.css}">
+    <link rel="stylesheet" th:href="@{/styles/animation.css}">
+</head>
+<body>
+<div class="container-scroller">
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+        <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper"/>
+        <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar"/>
+        <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+        <!-- main panel-->
+        <div class="main-panel" style="width: 100%">
+            <!--content-->
+            <div class="content-wrapper">
+                <!--row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="home-tab">
+                            <!--tab list-->
+<!--                            <th:block th:insert="fragment/tablist" />-->
+                            <div class="tab-content tab-content-basic">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Booking movie</h4>
+                                        <div onclick="display()" id="result"
+                                             class="alert alert-success"
+                                             style="width: fit-content"
+                                             role="alert"
+                                             th:if="${param.message}"
+                                             th:text="${param.message}">
+                                        </div>
+                                        <form class="m-4">
+                                            <div class="form-group">
+                                                <label for="movieName">Movie Name</label><br>
+                                                <select id="movieName" name="movieName" class="form-select">
+                                                    <option hidden="hidden"></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="movieFormatIdList">Movie format</label><br>
+                                                <select id="movieFormatIdList" name="movieFormatIdList"
+                                                        class="form-select" style="width: 135px">
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="date">Date</label><br>
+                                                <input id="date" type="date" name="date" class="form-control" style="width: 135px">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="time">Time</label><br>
+                                                <p style="color: red" id="error"></p>
+                                                <select id="time" name="date"
+                                                        class="form-select" style="width: 135px">
+                                                </select>
+                                            </div>
+
+                                            <div id="seat-content">
+                                            </div>
+
+                                            <div id="food-content" class="d-flex flex-wrap justify-content-around my-5">
+                                            </div>
+
+                                            <!--    modal confirm -->
+                                            <div class="modal" id="confirm" role="dialog"></div>
+                                            <!--  Button  Reset and Submit-->
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-primary me-2 submitData p-3" style="color: white">Submit</button>
+                                                <button type="reset" class="btn btn-danger p-3" style="color: white">Reset</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--footers-->
+            <th:block th:insert="fragment/footers"/>
+
+        </div>
+        <!-- main panel ends -->
+    </div>
+    <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    });
+    $(document).ready(function () {
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7);
+
+        const startDateString = startDate.toISOString().slice(0, 10);
+        const endDateString = endDate.toISOString().slice(0, 10);
+
+        const dateInput = document.querySelector('input[type="date"]');
+        dateInput.value = startDateString
+        dateInput.setAttribute('min', startDateString);
+        dateInput.setAttribute('max', endDateString);
+
+        let listMovie = [];
+        $.get({
+            url: 'http://localhost:8080/manage-cinema/api/booking-movie'
+        })
+            .done(function (response) {
+                listMovie = response
+                console.log(listMovie)
+                for (const item of response) {
+                    $(`#movieName`).append(
+                        `<option value="${item.movieId}" theater="${item.cinemaName}" >${item.movieName}</option>`
+                    )
+                }
+            })
+            .fail(function (xhr, status, error) {
+                console.log(xhr.responseText);
+            });
+
+        // select movie
+        let valMovie;
+        let valMovieName;
+        let valTheater;
+        $('#movieName').on('change', function () {
+            $('#seat-content').html('')
+            valMovie = $('#movieName :selected').val()
+            valMovieName = $('#movieName :selected').text()
+            valTheater = $('#movieName :selected').attr('theater')
+            let listFormatMovie = listMovie.filter(function (item) {
+                return item.movieId == valMovie;
+            })
+            const movieFormatElement = $(`#movieFormatIdList`)
+            movieFormatElement.html("");
+            movieFormatElement.append(`<option hidden="hidden"></option>`)
+            listFormatMovie[0].movieFormat.forEach(function (item) {
+                movieFormatElement.append(
+                    `<option value="${item.movieFormatId}">${item.movieFormatName}</option>`
+                )
+            })
+        })
+
+        // select movie type
+        let valMovieFormat
+        let valMovieType
+        let valDate;
+        let listSchedule = [];
+        $('#movieFormatIdList').on('change', function () {
+            $('#seat-content').html('')
+            valMovieFormat = $(`#movieFormatIdList :selected`).val()
+            valMovieType = $(`#movieFormatIdList :selected`).text()
+            $.post({
+                url: 'http://localhost:8080/manage-cinema/api/booking-schedule',
+                data:{ movieId: valMovie, movieFormatId: valMovieFormat}
+            })
+                .done(function (response) {
+                    listSchedule = response;
+                    console.log(listSchedule)
+                    valDate = $('#date').val()
+
+                    if (valDate !== ""){
+                        let listTime = listSchedule.filter(function (item) {
+                            return item.date == valDate;
+                        })
+                        const timeElement = $(`#time`)
+                        timeElement.html("");
+                        timeElement.append(`<option hidden="hidden"></option>`)
+                        listTime.forEach(function (item) {
+                            timeElement.append(
+                                `<option value="${item.scheduleId}" starAt="${item.startAt}">${item.startAt.slice(0,-3)}</option>`
+                            )
+                        })
+                    }
+
+                })
+                .fail(function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                });
+        })
+
+        // select date
+        $('#date').on('change',function (){
+            $('#seat-content').html('')
+            valDate = $('#date').val()
+            let listTime = listSchedule.filter(function (item) {
+                return item.date == valDate;
+            })
+            const timeElement = $(`#time`)
+            timeElement.html("");
+            timeElement.append(`<option hidden="hidden"></option>`)
+            listTime.forEach(function (item) {
+                timeElement.append(
+                    `<option value="${item.scheduleId}" starAt="${item.startAt}">${item.startAt.slice(0,-3)}</option>`
+                )
+            })
+        })
+
+        // select time
+        let valTime
+        let valShowTime
+        let valRoomName
+        let listSeat = []
+        $('#time').on('change',function (){
+            $('#seat-content').html('')
+            $('#seat-content').append(
+                ` <div class="screen">Screen</div>
+                  <div class="seats">
+                      <table>
+                         <tbody class="room">
+
+                          </tbody>
+                      </table>
+                  </div>
+
+                  <div class="note">
+                     <table>
+                         <tbody>
+                           <tr>
+                               <td class="note-seat" style="background-color: gray; color: #fff;"></td>
+                               <td> Booked</td>
+                               <td class="note-seat" style="border:3px solid green; color: green;"></td>
+                               <td> Normal</td>
+                               <td class="note-seat" style="border:3px solid red; color: red;"></td>
+                               <td> Vip</td>
+                               <td class="note-seat" style="background-color: orange; color: red;"></td>
+                               <td> Select</td>
+                           </tr>
+                         </tbody>
+                     </table>
+                  </div>`
+            )
+
+            valTime = $('#time').val();
+            valShowTime = $(this).find(':selected').text();
+            $.post({
+                url: 'http://localhost:8080/manage-cinema/api/booking-seat',
+                data:{ scheduleId: valTime}
+            })
+                .done(function (response) {
+                    console.log(response)
+                    listSeat = response;
+                    $('.room').html('');
+                    valRoomName = listSeat[0].roomName;
+                    for (let i = 1; i <= listSeat[0].numberHorizontalColumnSeats ; i++) {
+                        $('.room').append(
+                            `<tr data-row="${i}"></tr>`
+                        )
+                        for (let j = 1; j <= listSeat[0].numberHorizontalRowSeats ; j++) {
+                            $(`tr[data-row='${i}']`).append(
+                                `<td class="seat" ></td>`
+                            )
+                        }
+                    }
+
+                    let tdElement = $("td");
+                    for (let i = 0; i < tdElement.length; i++) {
+                        tdElement[i].textContent = listSeat[i].seatName
+                        tdElement[i].setAttribute('seat-name',listSeat[i].seatName)
+                        tdElement[i].setAttribute('seat-type',listSeat[i].seatType)
+                        tdElement[i].setAttribute('seat-id',listSeat[i].seatId)
+                        if (listSeat[i].seatType != 3){
+                            tdElement[i].setAttribute('seat-status',listSeat[i].status)
+                        }
+                        if (listSeat[i].status == 'SELECTED'){
+                            tdElement[i].classList.add('look')
+                        }
+
+                        switch (listSeat[i].seatType){
+                            case 1:
+                                tdElement[i].classList.add('normal')
+                                break;
+                            case 2:
+                                tdElement[i].classList.add('vip')
+                                break;
+                            case 3:
+                                tdElement[i].classList.add('broken')
+                                break;
+                        }
+                    }
+
+
+
+
+                })
+                .fail(function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                });
+        })
+
+        $(document).on('click','.seat',function (){
+            const seatData = $(this).attr('seat-status');
+            if (seatData == 'UN_SELECTED'){
+                $(this).addClass("select")
+            }
+        })
+
+        $(document).on('click','.select',function (){
+            $(this).removeClass('select')
+        })
+
+        let listFood = [];
+        $.get({
+            url: 'http://localhost:8080/manage-cinema/api/booking-food'
+        })
+            .done(function (response) {
+                listFood = response
+                console.log(listFood)
+                for (const item of response) {
+                    $(`#food-content`).append(
+                        `<div class="m-3" style="width: 18rem">
+                            <div class="card m-auto" style="width: 18rem;">
+                                <img src="${item.foodImgURL}" class="card-img-top" alt="${item.foodName}" style="height: 300px">
+                                <div class="card-body">
+                                <h5 class="card-title">${item.foodName}</h5>
+                                <p>${formatter.format(item.foodPrice)}</p>
+                                <input type="number" min="0" food-price="${item.foodPrice}" food-id="${item.foodId}" food-name="${item.foodName}" class="food form-control">
+                                </div>
+                            </div>
+                        </div>`
+                    )
+                }
+            })
+            .fail(function (xhr, status, error) {
+                console.log(xhr.responseText);
+            });
+
+        let data = []
+        let bill = []
+        $(document).on('click','.submitData',function (){
+            const seatSelectElement = $('.select')
+            if (seatSelectElement.length > 0){
+                let listSeatIds = []
+                let listSeatNames = []
+
+                for (let i = 0; i < seatSelectElement.length; i++) {
+                    listSeatIds.push(parseInt(seatSelectElement[i].getAttribute('seat-id')))
+                    listSeatNames.push(seatSelectElement[i].getAttribute('seat-name'))
+                }
+
+                let foodRequestDtoList = []
+                let foodLists = []
+                const foodElement = $('.food')
+                for (let i = 0; i < foodElement.length; i++) {
+                    const food = {
+                        foodId: parseInt(foodElement[i].getAttribute('food-id')),
+                        quantity: parseInt(foodElement[i].value)
+                    }
+                    foodRequestDtoList.push(food)
+
+                    const foodData = {
+                        foodId: foodElement[i].getAttribute('food-name'),
+                        quantity: foodElement[i].value,
+                        price: parseInt(foodElement[i].getAttribute('food-price'))
+                    }
+                    foodLists.push(foodData)
+                }
+
+                bill = {
+                    movieFormatId: parseInt(valMovieFormat),
+                    movieId: parseInt(valMovie),
+                    scheduleId: parseInt(valTime),
+                    listSeatIds: listSeatIds,
+                    foodRequestDtoList: foodRequestDtoList
+                }
+
+                data = {
+                    movieName: valMovieName,
+                    movieType: valMovieType,
+                    theater: valTheater,
+                    showTime: valShowTime,
+                    showDate: valDate,
+                    screen: valRoomName,
+                    seats: listSeatNames,
+                    food: foodLists
+
+                }
+                console.log(bill);
+                console.log(data);
+                console.log(JSON.stringify(bill))
+
+                $.post({
+                    url: 'http://localhost:8080/manage-cinema/api/booking-bill',
+                    data: JSON.stringify(bill),
+                    contentType: 'application/json; charset=utf-8',
+                }).done(function (response) {
+                    console.log(response);
+                    sessionStorage.setItem('data', JSON.stringify(data));
+                    sessionStorage.setItem('total', JSON.stringify(response));
+                    let countDownDate = new Date().getTime() + 2 * 60 * 1000;
+                    sessionStorage.setItem("countDownDate", countDownDate);
+                    window.location.replace("http://localhost:8080/manage-cinema/pay")
+                }).fail(function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert(xhr.responseText)
+                    window.location.replace("http://localhost:8080/manage-cinema/booking-movie")
+                });
+            }else {
+                alert("You haven't chosen a seat yet")
+            }
+        })
+
+    })
+
+
+</script>
+<script>
+    const myTimeout = setTimeout(display, 5000);
+
+    function display(){
+        const x = document.getElementById("result");
+        if(x){
+            x.style.display = "none";
+        }
+    }
+
+    const alertDiv = document.getElementById('result');
+    alertDiv.style.animation = "slideDown 2s ease-in-out";
+
+</script>
+</body>
+
+</html>
+

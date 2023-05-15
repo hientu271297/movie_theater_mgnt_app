@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay</title>
+    <th:block th:insert="fragment/head"/>
+    <link rel="stylesheet" th:href="@{/styles/animation.css}">
+</head>
+<body>
+<div class="container-scroller">
+    <!--pro-banner-->
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+        <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper"/>
+        <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar"/>
+        <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+        <!-- main panel-->
+        <div class="main-panel" style="width: 100%">
+            <!--content-->
+            <div class="content-wrapper">
+                <!--row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="home-tab">
+                            <!--tab list-->
+                            <!--                            <th:block th:insert="fragment/tablist" />-->
+                            <div class="tab-content tab-content-basic">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Booking movie</h4>
+                                        <form class="m-4">
+                                            <div class="container-fluid d-flex justify-content-between">
+                                                <div class="border rounded shadow-lg" style="background-color: antiquewhite;width: 50%">
+                                                    <h1 class="text-center m-3 mt-3">Bill</h1>
+                                                    <table class="table table-borderless">
+                                                        <tbody class="m-3">
+                                                        <tr>
+                                                            <th class="w-25">Movie name :</th>
+                                                            <td id="movieName"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Movie type :</th>
+                                                            <td id="movieType"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Theater :</th>
+                                                            <td id="theater"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Showtime :</th>
+                                                            <td id="showTime"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Screen :</th>
+                                                            <td id="screen"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Seats :</th>
+                                                            <td id="seats"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Ticket :</th>
+                                                            <td id="ticket"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Food :</th>
+                                                            <td id="food"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Total:</th>
+                                                            <td id="total"></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="border rounded p-3 shadow-lg ms-5" style="height: fit-content; background-color: whitesmoke;width: 40%">
+                                                    <div>
+                                                        <h1 id="countdown" class="text-center my-3" style="color: red"></h1>
+                                                        <div class="mt-5 mb-4 ms-4">
+                                                            <h3>Payment methods:</h3>
+                                                        </div>
+                                                        <div onclick="display()" id="result"
+                                                             class="alert alert-danger"
+                                                             style="width: fit-content"
+                                                             role="alert"
+                                                             th:if="${param.message}"
+                                                             th:text="${param.message}">
+                                                        </div>
+                                                        <div>
+                                                            <div id="payInput">
+                                                                <div class="mb-3" style="margin: 0 25px">
+                                                                    <input type="text" class="form-control" id="idCard" placeholder="Enter id card">
+                                                                </div>
+                                                            </div>
+                                                            <div id="payCard" class="form-check ms-5">
+                                                                <input class="form-check-input" type="radio" name="pay" id="point" value="point">
+                                                                <label class="form-check-label m-auto" style="font-size: 20px"  for="point">
+                                                                    <ion-icon name="card-outline"></ion-icon>
+                                                                    <span>Point card</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check ms-5">
+                                                                <input class="form-check-input" type="radio" name="pay" id="cash" value="cash">
+                                                                <label class="form-check-label m-auto" style="font-size: 20px" for="cash">
+                                                                    <ion-icon name="cash-outline"></ion-icon>
+                                                                    <span>Cash</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center mt-3">
+                                                            <button id="pay" type="button" class="submitData btn btn-danger w-75 py-3" style="color: white">Pay</button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--footers-->
+            <th:block th:insert="fragment/footers"/>
+
+        </div>
+        <!-- main panel ends -->
+    </div>
+    <!-- page body wrapper ends -->
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function () {
+        let total = JSON.parse(sessionStorage.getItem('total'));
+        let data = JSON.parse(sessionStorage.getItem('data'));
+        console.log(total);
+        console.log(data);
+
+        const formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        });
+
+        $('#movieName').text(`${data.movieName}`)
+        $('#movieType').text(`${data.movieType}`)
+        $('#theater').text(`${data.theater}`)
+        $('#showTime').text(`${data.showTime} , ${data.showDate}`)
+        $('#screen').text(`${data.screen}`)
+        let seatString = "";
+        for (let i = 0; i < data.seats.length; i++) {
+            seatString += `${data.seats[i]}, `
+        }
+        $('#seats').append(seatString.slice(0, -2));
+        let foodString = "";
+        let foodPrice = 0;
+        for (let i = 0; i < data.food.length; i++) {
+            if (data.food[i].quantity > 0 && data.food[i].quantity != null){
+                foodString += `${data.food[i].foodId} x${data.food[i].quantity}, `
+                foodPrice += (data.food[i].quantity * data.food[i].price)
+            }
+        }
+        $('#food').append(foodString.slice(0,-2))
+
+        $('#total').text(`${formatter.format(total.totalPrice)}`)
+        let price = total.totalPrice - foodPrice
+        console.log(price)
+        $('#ticket').append(`${formatter.format(price)}`)
+
+        // pay
+        $(document).on('click','.submitData',function (){
+            const memberId = $('#idCard').val()
+            if ($('#point').is(':checked')) {
+                let billStatusDto = {
+                    billId: total.billId,
+                    cardId: memberId,
+                    paymentName: "pointCard"
+                }
+                pay(billStatusDto)
+            } else if ($('#cash').is(':checked')) {
+                let billStatusDto = {
+                    billId: total.billId,
+                    cardId: memberId,
+                    paymentName: "cash"
+                }
+                pay(billStatusDto)
+            }else {
+                alert('Please choose 1 payment method')
+            }
+        })
+
+        function pay(billStatusDto){
+            $.post({
+                url: 'http://localhost:8080/manage-cinema/api/booking-bill-status',
+                data: JSON.stringify(billStatusDto),
+                contentType: 'application/json; charset=utf-8',
+            }).done(function (response) {
+                console.log(response)
+                sessionStorage.removeItem('total');
+                sessionStorage.removeItem('data');
+                // alert(response)
+                window.location.replace(`http://localhost:8080/manage-cinema/booking-movie?message=${response}`)
+            }).fail(function (xhr, status, error) {
+                console.log(xhr.responseText);
+                alert(xhr.responseText)
+                // window.location.replace(`http://localhost:8080/manage-cinema/pay?message=${xhr.responseText}`)
+            });
+        }
+
+    })
+</script>
+<script>
+    // Thời gian cần đếm ngược
+    let countDownDate = sessionStorage.getItem("countDownDate");
+
+    if (countDownDate){
+        // Cập nhật thời gian mỗi giây
+        let x = setInterval(function() {
+
+            // Lấy thời gian hiện tại
+            let now = new Date().getTime();
+
+            // Tính toán khoảng cách giữa thời gian hiện tại và thời gian cần đếm ngược
+            let distance = countDownDate - now;
+
+            // Tính toán số phút và giây còn lại
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Hiển thị thời gian đếm ngược trong phần tử có id="countdown"
+            document.getElementById("countdown").innerHTML = minutes + "m " + seconds + "s ";
+
+            // Nếu thời gian cần đếm ngược đã hết, hiển thị thông báo
+            if (distance < 0) {
+                clearInterval(x);
+                sessionStorage.removeItem('total');
+                sessionStorage.removeItem('data');
+                sessionStorage.removeItem('countDownDate')
+                window.location.replace("http://localhost:8080/manage-cinema/booking-movie")
+            }
+        }, 1000);
+    }
+</script>
+<script>
+    const myTimeout = setTimeout(display, 5000);
+
+    function display(){
+        const x = document.getElementById("result");
+        if(x){
+            x.style.display = "none";
+        }
+    }
+
+    const alertDiv = document.getElementById('result');
+    alertDiv.style.animation = "slideDown 2s ease-in-out";
+
+</script>
+</body>
+</html>

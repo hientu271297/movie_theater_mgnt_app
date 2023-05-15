@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Movie-view</title>
+    <th:block th:insert="fragment/head" />
+    <link rel="stylesheet" th:href="@{/styles/animation.css}">
+    <style>
+        .cursor{
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container-scroller">
+
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+        <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper" />
+        <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar" />
+        <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+        <!-- main panel-->
+        <div class="main-panel">
+            <!--content-->
+            <div class="content-wrapper">
+                <!--row-->
+                <div class="row">
+                    <div class="col">
+                        <div class="home-tab">
+                            <!--tab list-->
+                            <th:block th:insert="fragment/tablist" />
+                            <div class="tab-content tab-content-basic">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Movie List</h4>
+
+                                        <!--    modal confirm delete-->
+                                        <div class="modal"  id="deleteConfirm"  role="dialog"></div>
+
+                                        <!--    result action-->
+                                        <div onclick="display()" id="result" class="alert alert-success"
+                                             style="width: fit-content"
+                                             role="alert"
+                                             th:if="${result}"
+                                             th:text="${result}">
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Picture</th>
+                                                    <th scope="col" class="cursor">
+                                                            <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('-movieName')}"><ion-icon name="caret-down-outline"></ion-icon>
+                                                            </span>
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('movieName')}"><ion-icon name="caret-up-outline"></ion-icon>
+                                                            </span>
+                                                        <a style="text-decoration: none; color: black"
+                                                           th:attr="onclick=|return changeHref('movieName')|"
+                                                           id="movieName">
+                                                            Movie Name
+                                                        </a>
+
+                                                        <!--                                        Ant design multi sorting            -->
+                                                        <!--                                                        <a style="text-decoration: none; color: black"-->
+                                                        <!--                                                           id="movieName"-->
+                                                        <!--                                                           th:href="@{${sorts.get(1).isEmpty()-->
+                                                        <!--                                                           ? '/movie?sort=' + sorts.get(0)+ '&sort=movieName'-->
+                                                        <!--                                                           : (sorts.get(1).equalsIgnoreCase('movieName') ? '/movie?sort=' + sorts.get(0) + '&sort=-movieName'-->
+                                                        <!--                                                                                                         : '/movie?sort='+ sorts.get(0) +'&sort=')}}">-->
+                                                        <!--                                                            Movie Name-->
+                                                        <!--                                                        </a>-->
+                                                    </th>
+
+                                                    <th class="cursor">
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('-earlyDate')}"><ion-icon name="caret-down-outline"></ion-icon>
+                                                            </span>
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('earlyDate')}"><ion-icon name="caret-up-outline"></ion-icon>
+                                                            </span>
+                                                        <a style="text-decoration: none; color: black"
+                                                           th:attr="onclick=|return changeHref('earlyDate')|"
+                                                           id="earlyDate">
+                                                            Early Date
+                                                        </a>
+                                                    </th>
+                                                    <th class="cursor">
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('-actor')}"><ion-icon name="caret-down-outline"></ion-icon>
+                                                        </span>
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('actor')}"><ion-icon name="caret-up-outline"></ion-icon>
+                                                            </span>
+                                                        <a style="text-decoration: none; color: black" id="actor"
+                                                           th:attr="onclick=|return changeHref('actor')|"
+                                                        >Actor
+                                                        </a>
+                                                    </th>
+                                                    <th>
+                                                        Producer
+                                                    </th>
+                                                    <th>
+                                                        Status
+                                                    </th>
+                                                    <th class="cursor">
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('-duration')}"><ion-icon name="caret-down-outline"></ion-icon>
+                                                        </span>
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('duration')}"><ion-icon name="caret-up-outline"></ion-icon>
+                                                            </span>
+                                                        <a style="text-decoration: none; color: black"
+                                                           th:attr="onclick=|return changeHref('duration')|"
+                                                           id="duration">
+                                                            Duration
+                                                        </a>
+                                                    </th>
+                                                    <th class="cursor">
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('-hottedMovie')}"><ion-icon name="caret-down-outline"></ion-icon>
+                                                        </span>
+                                                        <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('hottedMovie')}"><ion-icon name="caret-up-outline"></ion-icon>
+                                                            </span>
+                                                        <a style="text-decoration: none; color: black"
+                                                           th:attr="onclick=|return changeHref('hottedMovie')|"
+                                                           id="hottedMovie">
+                                                            Hot movie
+                                                        </a>
+                                                        <!--                                        Ant design multi sorting          -->
+                                                        <!--                                                        <a style="text-decoration: none; color: black"-->
+                                                        <!--                                                           th:href="@{${sorts.get(0).isEmpty()-->
+                                                        <!--                                                           ? '/movie?sort=' + 'hottedMovie'+ '&sort=' + sorts.get(1)-->
+                                                        <!--                                                           : (sorts.get(0).equalsIgnoreCase('hottedMovie') ? '/movie?sort=' + '-hottedMovie' + '&sort=' + sorts.get(1)-->
+                                                        <!--                                                                                                            : '/movie?sort=' + '&sort=' + sorts.get(1))}}">-->
+                                                        <!--                                                            Hot movie-->
+                                                        <!--                                                        </a>-->
+                                                    </th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="e,i : ${movieList}">
+                                                    <td th:text="${pageNumber*size + i.count}"></td>
+                                                    <td class="py-1">
+                                                        <img th:if="${e.getImageLargeUrl()}" style="max-width: 100px;max-height: 100px" alt="poster" th:src="@{'/files/'+${e.imageSmallUrl}}">
+                                                    </td>
+                                                    <td >
+                                                        <p style="width: 200px;white-space: break-spaces; word-wrap: break-word;margin: 0;" th:text="${e.getMovieName()}"></p>
+                                                    </td>
+                                                    <td th:text="${e.getEarlyDate()}"></td>
+                                                    <td style="width: 200px;white-space: break-spaces; word-wrap: break-word;margin: 0;" th:text="${e.getActor()}"></td>
+                                                    <td style="width: 200px;white-space: break-spaces; word-wrap: break-word;margin: 0;" th:text="${e.getProducer()}"></td>
+                                                    <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')>= e.earlyDate.toString() ? 'Now showing':'Coming soon'}"></td>
+                                                    <td th:text="${e.getDuration()}"></td>
+                                                    <td th:text="${e.getHottedMovie()}"></td>
+                                                    <td>
+                                                        <a th:href="@{/movie/update/{id}(id=${e.getMovieId()})}"><ion-icon name="create-outline" class="btn btn-warning m-0 "></ion-icon></a>
+                                                        <a th:attr="onclick=|confirmDelete(${e.getMovieId()},${pageNumber},${size},'${keyword}','${filter}')|"
+                                                           class="btn btn-danger m-0 "><ion-icon name="trash-outline"></ion-icon></a>
+                                                    </td>
+
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!--            paging-->
+                                        <nav aria-label="Page navigation example" style="margin-top: 18px" th:if="${totalPage > 1}">
+                                            <ul class="pagination">
+
+
+
+                                                <!-- First button-->
+                                                <li class="page-item" th:if="${pageNumber} - 3 > 0">
+                                                    <a class="page-link"
+                                                       th:id="'first'"
+
+                                                       th:attr="onclick=|paging(${'first'}, 0)|"
+
+                                                       th:href="@{/movie(pageNumber = 0, size=${size}, q=${keyword}, filter =${filter})}" th:text="'First'"></a>
+                                                </li>
+                                                <!--check button previous-->
+                                                <li th:classappend="${pageNumber} <= 0 ? 'disabled page-item' : 'page-item'">
+                                                    <a class="page-link"
+                                                       id="prev"
+                                                       th:attr="onclick=|paging('prev','${pageNumber - 1}')|"
+                                                       th:href="@{/movie(pageNumber = ${pageNumber -1}, size=${size}, q=${keyword}, filter =${filter})}" aria-label="Previous">
+                                                        <span aria-hidden="true"><i class="fas fa-angle-left"></i>&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" th:if="${pageNumber} - 3 > 0"><span class="page-link"> ... </span></li>
+
+                                                <!--total page <= 5   -->
+                                                <li class="page-item"
+                                                    th:if="${totalPage <= 5}" th:each="i : ${#numbers.sequence(0,totalPage - 1)}">
+                                                    <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'"
+                                                       th:id="${'page'+i}"
+                                                       th:attr="onclick=|paging('${'page'+i}', ${i})|"
+
+                                                       th:href="@{/movie(pageNumber = ${i}, size=${size}, q=${keyword}, filter =${filter})}" th:text="${i+1}"></a>
+                                                </li>
+
+                                                <!-- total page > 5 and page number < 2-->
+                                                <li class="page-item" th:if="${totalPage > 5 && pageNumber < 2}" th:each="i : ${#numbers.sequence(0,4)}">
+                                                    <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'"
+                                                       th:id="${'page'+i}"
+                                                       th:attr="onclick=|paging('${'page' + i}', ${i})|"
+
+                                                       th:href="@{/movie(pageNumber = ${i}, size=${size})}" th:text="${i+1}"></a>
+                                                </li>
+
+                                                <!-- total page > 5 and page number >=2 and page < total page - 2 -->
+                                                <li class="page-item" th:if="${totalPage > 5 && pageNumber >= 2 && pageNumber < totalPage - 2}" th:each="i : ${#numbers.sequence(0,4)}">
+
+                                                    <a class="page-link" th:style="${i == 2} ? 'background-color: #0d6efd; color: white'"
+                                                       th:id="'page'+${pageNumber - 2 + i}"
+                                                       th:attr="onclick=|paging('${'page' + pageNumber - 2 + i}', ${pageNumber - 2 + i})|"
+
+                                                       th:href="@{/movie(pageNumber = ${pageNumber - 2 + i}, size=${size}, q=${keyword}, filter =${filter})}" th:text="${pageNumber - 1 + i}"></a>
+                                                </li>
+
+                                                <!-- total page > 5 and page number >=2 and page >= total page - 2 -->
+                                                <li class="page-item" th:if="${totalPage > 5 && pageNumber >= 2 && pageNumber >= totalPage - 2}" th:each="i : ${#numbers.sequence(totalPage - 5, totalPage - 1)}">
+                                                    <a class="page-link" th:style="${i == pageNumber} ? 'background-color: #0d6efd; color: white'"
+                                                       th:id="'page'+${i}"
+                                                       th:attr="onclick=|paging('${'page' + i}', i)|"
+
+                                                       th:href="@{/movie(pageNumber = ${i}, size=${size}, q=${keyword}, filter =${filter})}" th:text="${i+1}"></a>
+                                                </li>
+                                                <!--check button next-->
+                                                <li class="page-item" th:if="${pageNumber + 4 <= totalPage - 1}"><span class="page-link"> ... </span></li>
+                                                <li th:if="${totalPage > 1}" th:class="(${pageNumber} >= (${totalPage}-1)) ? 'disabled page-item' : 'page-item'">
+                                                    <a class="page-link" id="next"
+
+                                                       th:attr="onclick=|paging('next', ${pageNumber + 1})|"
+
+                                                       th:href="@{/movie(pageNumber = ${pageNumber +1}, size=${size}, q=${keyword}, filter =${filter})}" aria-label="Next">
+                                                        <span aria-hidden="true"><i class="fas fa-angle-right"></i>&raquo;</span>
+                                                    </a>
+                                                </li>
+                                                <!--last button-->
+                                                <li class="page-item" th:if="${pageNumber + 4 <= totalPage - 1}">
+                                                    <a class="page-link"
+                                                       th:id="'last'"
+                                                       th:attr="onclick=|paging(${'last' + i}, ${totalPage - 1})|"
+                                                       th:href="@{/movie(pageNumber = ${totalPage -1}, size=${size}, q=${keyword}, filter =${filter})}" th:text="'Last'"></a>
+                                                </li>
+
+
+                                            </ul>
+                                        </nav>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--footers-->
+            <th:block th:insert="fragment/footers" />
+
+        </div>
+        <!-- main panel ends -->
+    </div>
+    <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+
+<script th:inline="javascript">
+
+    const contextPath = /*[[@{/}]]*/ '';
+    let sortInHref;
+    const currentSort  = [[${sorts}]];
+    const pageNumber = [[${pageNumber}]];
+    const size = [[${size}]];
+    const keyword = [[${keyword}]];
+    const filter = [[${filter}]];
+
+    function paging(id,pageNumber){
+
+        sortInHref = "?pageNumber=".concat(pageNumber,"&size=",size,"&q=",keyword,"&filter=",filter);
+
+        for(let i = 0; i< currentSort.length; i++){
+            sortInHref = sortInHref.concat("&sort=",currentSort[i]);
+        }
+        document.getElementById(id).href = contextPath.concat("movie",sortInHref);
+    }
+
+    function changeHref(field){
+        sortInHref = "?pageNumber=".concat(0,"&size=",size,"&q=",keyword,"&filter=",filter);
+        if(!currentSort.includes("-".concat(field)) && !currentSort.includes(field) && currentSort.length <=2){
+            currentSort.push(field);
+        }
+        else if (!currentSort.includes("-".concat(field)) && !currentSort.includes(field) && currentSort.length === 3){
+            currentSort[2] = field; // max size to sorting is 3
+        }
+        else {
+            for (let i = 0; i<currentSort.length; i++) {
+                if (currentSort[i].includes("-".concat(field))) {
+                    currentSort.splice(i,1);
+                    break;
+                } else if (currentSort[i].includes(field)) {
+                    currentSort[i] = "-".concat(field);
+                    break;
+                }
+            }
+        }
+        for (let i = 0; i<currentSort.length; i++){
+            sortInHref = sortInHref.concat("&sort=",currentSort[i]);
+        }
+        document.getElementById(field).href = currentSort.length > 0 ? contextPath.concat("movie",sortInHref) : contextPath.concat("movie");
+    }
+
+    const myTimeout = setTimeout(display, 5000);
+
+    function display(){
+        const x = document.getElementById("result");
+        if(x){
+            x.style.display = "none";
+        }
+    }
+    const alertDiv = document.getElementById('result');
+    alertDiv.style.animation = "slideDown 2s ease-in-out";
+
+    function confirmDelete(id,pageNumber,size,q,filter){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display='block';
+        doc.innerHTML=
+            `<div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="displayNone()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-danger">Movie will be Deleted</p>
+                        <p><b>ARE YOU SURE ?</b></p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" >
+                        <a style="text-decoration: none; color: white" href="${contextPath}movie/delete/${id}?pageNumber=${pageNumber}&size=${size}&q=${q}&filter=${filter}">
+                            Confirm Delete
+                        </a>
+                    </button>
+                    <button type="button" class="btn btn-danger" style="color: white" data-dismiss="modal" onclick="displayNone()">Close</button>
+                    </div>
+                </div>
+        </div>`
+    }
+    function displayNone(){
+        const doc = document.getElementById("deleteConfirm");
+        doc.style.display='none';
+    }
+
+    function changeTypeSearch(){
+        const filter = $('#filter').val();
+        if (filter === 'earlyDate' || filter === 'startDate' || filter ==='endDate'){
+            $('#search-content').prop('type','date');
+        }
+        else if(filter === 'year' || filter ==='duration'){
+            $('#search-content').prop('type','number');
+        }else {
+            $('#search-content').prop('type','text');
+        }
+    }
+    function display(){
+        const x = document.getElementById("result");
+        if(x){
+            x.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+
+</html>
+

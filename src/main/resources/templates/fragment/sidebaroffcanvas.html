@@ -1,0 +1,33 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link" th:href="@{/movie}">-->
+<!--                <i class="mdi mdi-grid-large menu-icon"></i>-->
+<!--                <span class="menu-title">Dashboard</span>-->
+<!--            </a>-->
+<!--        </li>-->
+        <li class="nav-item nav-category">Feature</li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/booking-movie}">
+                <i class="menu-icon mdi mdi-layers-outline"></i>
+                <span class="menu-title">Booking movie</span>
+            </a>
+        </li>
+        <li class="nav-item nav-category">Setting</li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <i class="menu-icon mdi mdi-file-document"></i>
+                <span class="menu-title">Add New</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+                <ul class="nav flex-column sub-menu">
+<!--                    <li class="nav-item"> <a class="nav-link"  th:href="@{/voucher/add}">Voucher</a></li>-->
+                    <li class="nav-item"> <a class="nav-link"  th:href="@{/movie/add}">Movie</a></li>
+                    <li class="nav-item"> <a class="nav-link"  th:href="@{/admin/room/add}" sec:authorize="hasAuthority('ADMIN')">Room</a></li>
+                    <li class="nav-item"> <a class="nav-link"  th:href="@{/employee/admin/add}" sec:authorize="hasAuthority('ADMIN')">Employee</a></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</nav>

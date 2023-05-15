@@ -1,0 +1,64 @@
+<nav aria-label="Page navigation example" th:if="${totalPage > 1}">
+    <ul class="pagination">
+        <!--check button previous-->
+        <li class="page-item" th:classappend="${pageNumber} <= 0 ? 'disabled page-item' : 'page-item'">
+            <a class="page-link" id="prev" th:attr="onclick=|paging('prev',${pageNumber - 1},${size},${keyword},${filter})|"
+               th:href="@{/voucher(pageNumber = ${pageNumber -1}, size=${size}, q=${keyword},filter =${filter})}" aria-label="Previous" style="border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <!-- First button-->
+        <li class="page-item" th:if="${pageNumber} - 3 > 0">
+            <a class="page-link" th:id="'page'+${pageNumber}"
+               th:attr="onclick=|paging(${'page' + 0},0,${size},${q},${filter})|"
+               th:href="@{/voucher(pageNumber = 0, size=${size}, q=${keyword}, filter =${filter})}" th:text="'First'" style="border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);"></a>
+        </li>
+        <li class="page-item" th:if="${pageNumber} - 3 > 0"><span class="page-link" style="border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);"> ... </span></li>
+        <!--total page <= 5   -->
+        <li class="page-item" th:id="'page' + ${pageNumber}" th:if="${totalPage <= 5}" th:each="i : ${#numbers.sequence(0,totalPage - 1)}">
+            <a class="page-link" th:attr="onclick=|paging(${'page'+i},${i},${size},${q},${filter})|"
+               th:href="@{/voucher(pageNumber = ${i}, size=${size}, q=${keyword}, filter =${filter})}" th:text="${i+1}" style="border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);"></a>
+        </li>
+        <!-- total page > 5 and page number < 2-->
+        <li class="page-item" th:if="${totalPage > 5 && pageNumber < 2}" th:each="i : ${#numbers.sequence(0,4)}">
+            <a class="page-link" th:attr="onclick=|paging(${'page' + i},0,${size},${q},${filter})|"
+               th:href="@{/voucher(pageNumber = ${i}, size=${size}, q=${keyword}, filter =${filter})}" th:text="${i+1}" style="border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);"></a>
+        </li>
+        <!-- total page > 5 and page number >=2 and page < total page - 2 -->
+        <li class="page-item" th:if="${totalPage > 5 && pageNumber >= 2 && pageNumber < totalPage - 2}" th:each="i : ${#numbers.sequence(0,4)}">
+            <a class="page-link"  th:attr="onclick=|paging(${'page' + pageNumber - 2 + i},0,${size},${q},${filter})|"
+               th:href="@{/voucher(pageNumber = ${pageNumber - 2 + i}, size=${size}, q=${keyword}, filter =${filter})}" th:text="${pageNumber - 1 + i}" style="border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);"></a>
+        </li>
+        <!-- total page > 5 and page number >=2 and page >= total page - 2 -->
+        <li class="page-item" th:if="${totalPage > 5 && pageNumber >= 2 && pageNumber >= totalPage - 2}" th:each="i : ${#numbers.sequence(totalPage - 5, totalPage - 1)}">
+            <a class="page-link"  th:attr="onclick=|paging(${'page' + i},0,${size},${q},${filter})|"
+               th:href="@{/voucher(pageNumber = ${i}, size=${size}, q=${keyword}, filter =${filter})}" th:text="${i+1}" style="border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);"></a>
+        </li>
+        <!--last button-->
+        <li class="page-item" th:if="${pageNumber + 4 <= totalPage - 1}"><span class="page-link" style="border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);"> ... </span></li>
+        <li class="page-item" th:if="${pageNumber + 4 <= totalPage - 1}">
+            <a class="page-link" th:href="@{/voucher(pageNumber = ${totalPage -1}, size=${size}, q=${keyword}, filter =${filter})}" th:text="'Last'" style="border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);"></a>
+        </li>
+        <!--check button next-->
+        <li class="page-item" th:if="${totalPage > 1}" th:class="(${pageNumber} >= (${totalPage}-1)) ? 'disabled page-item' : 'page-item'">
+            <a class="page-link" th:attr="onclick=|paging('${pageNumber + 1}','${size}','${q}','${filter}')|"
+               th:href="@{/voucher(pageNumber = ${pageNumber +1}, size=${size}, q=${keyword}, filter =${filter})}" aria-label="Next" style="border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border: none;
+    box-shadow: 10px 5px 5px rgba(0,0,255,.2);">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

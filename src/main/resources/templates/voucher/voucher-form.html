@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragment/head" />
+    <title>Voucher form</title>
+</head>
+<body >
+<div class="container-scroller">
+
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+        <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper" />
+        <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar" />
+        <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+        <!-- main panel-->
+        <div class="main-panel">
+            <!--content-->
+            <div class="content-wrapper">
+                <!--row-->
+                <div class="row">
+                    <div class="col grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <p class="card-description">
+                                    Add Voucher
+                                </p>
+                                <form class="m-4" enctype="multipart/form-data"
+                                      th:action="@{/voucher/save}" method="post" th:object="${voucherDto}">
+                                    <!-- voucher name -->
+                                    <div class="form-group"> <label for="voucherName">Voucher name<span class="text-danger">*</span></label>
+                                        <input th:field="*{voucherId}" hidden="hidden">
+                                        <input th:field="*{voucherName}"
+                                               type="text"
+                                               class="form-control"
+                                               id="voucherName"
+                                               placeholder="Enter voucher name"
+                                               th:readonly="${voucherDto.getVoucherId()!= null}"
+                                        />
+                                        <p th:errors="*{voucherName}" style="color: red"></p>
+                                    </div>
+                                    <!-- discount -->
+                                    <div class="form-group"> <label for="discount">Discount</label>
+                                        <input th:field="*{discount}"
+                                               type="number"
+                                               class="form-control"
+                                               id="discount"
+                                               placeholder="Enter discount"
+                                        />
+                                        <p th:errors="*{discount}" style="color: red"></p>
+                                    </div>
+                                    <!-- max value -->
+                                    <div class="form-group"> <label for="max-value">Max Value</label>
+                                        <input th:field="*{maxValue}"
+                                               type="number"
+                                               class="form-control"
+                                               id="max-value"
+                                               placeholder="Enter max value"
+                                        />
+                                        <p th:errors="*{maxValue}" style="color: red"></p>
+                                    </div>
+                                    <!-- min value -->
+                                    <div class="form-group"> <label for="min-value">Min Value</label>
+                                        <input th:field="*{minValue}"
+                                               type="number"
+                                               class="form-control"
+                                               id="min-value"
+                                               placeholder="Enter min value"
+                                        />
+                                        <p th:errors="*{minValue}" style="color: red"></p>
+                                    </div>
+                                    <!-- start time -->
+                                    <div class="form-group"> <label for="start-time">Start Time<span class="text-danger">*</span></label>
+                                        <input th:field="*{startTime}"
+                                               type="date"
+                                               class="form-control"
+                                               id="start-time"
+                                               placeholder="Enter start time"
+                                        />
+                                        <p th:errors="*{startTime}" style="color: red"></p>
+                                    </div>
+                                    <!-- end time -->
+                                    <div class="form-group"> <label for="end-time">End Time<span class="text-danger">*</span></label>
+                                        <input th:field="*{endTime}"
+                                               type="date"
+                                               class="form-control"
+                                               id="end-time"
+                                               placeholder="Enter end time"
+                                        />
+                                        <p th:errors="*{endTime}" style="color: red"></p>
+                                    </div>
+                                    <!-- status -->
+                                    <div class="form-group">
+                                        <p>Status</p>
+                                        <label for="inactive">Active</label>
+                                        <input type="checkbox"
+                                               th:field="*{status}"
+                                               id="inactive"
+                                               value="true"
+                                        />
+<!--                                        <label for="unactive">Un Active</label>-->
+<!--                                        <input type="radio"-->
+<!--                                               th:field="*{status}"-->
+<!--                                               id="unactive"-->
+<!--                                        />-->
+                                    </div>
+                                    <!-- type -->
+<!--                                    <div class="form-group">-->
+<!--                                        <label for="type" >Type<span class="text-danger">*</span></label>-->
+<!--                                        <select id="type" th:field="*{type}" class="form-select">-->
+<!--                                            <option-->
+<!--                                                    value="abc"-->
+<!--                                                    selected-->
+<!--                                            ></option>-->
+<!--                                        </select>-->
+<!--                                        <p th:errors="*{type}" style="color: red"></p>-->
+<!--                                    </div>-->
+                                    <div class="form-group">
+                                        <select class="form-select"  th:field="*{type}">
+                                            <option value="Voucher Type 1">Voucher Type 1</option>
+                                            <option value="Voucher Type 2">Voucher Type 2</option>
+                                            <option value="Voucher Type 3">Voucher Type 3</option>
+                                        </select>
+                                        <p th:errors="*{type}" style="color: red"></p>
+                                    </div>
+
+                                    <!--    modal confirm -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Confirm Submit</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p  th:if="${voucherDto.getVoucherId() == null}">Do you want add new Voucher</p>
+                                                    <p  th:if="${voucherDto.getVoucherId()!= null}">Do you want upadate Voucher</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success">Confirm</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--  Button  Reset and Submit-->
+                                    <div class="form-group">
+<!--                                        <button type="button" class="btn btn-primary" >Submit</button>-->
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" th:attr="onclick=|confirmAction('${voucherDto.getVoucherId()}')|">
+                                            Submit
+                                        </button>
+                                        <button type="reset" class="btn btn-danger">Reset</button>
+                                    </div>
+
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--footers-->
+            <th:block th:insert="fragment/footers" />
+
+        </div>
+        <!-- main panel ends -->
+    </div>
+    <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+<script th:inline="javascript">
+  function confirmAction(id){
+
+    if (id === "null"){
+      document.getElementById("content-header").innerText= "Confirm add new voucher"
+      document.getElementById("content-line").innerText= "Confirm add new voucher"
+    }
+  }
+
+  }</script>
+
+
+</body>
+
+</html>

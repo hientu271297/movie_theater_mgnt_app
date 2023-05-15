@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragment/head" />
+    <title>Movie-form</title>
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>-->
+
+</head>
+<body>
+<div class="container-scroller">
+
+    <!--navbar-->
+    <th:block th:insert="fragment/navbar" />
+    <!--container-->
+    <div class="container-fluid page-body-wrapper">
+        <!--theme wrapper-->
+        <th:block th:insert="fragment/themewrapper" />
+        <!--right side bar-->
+        <th:block th:insert="fragment/rightsidebar" />
+        <!-- side bar offcanvas-->
+        <th:block th:insert="fragment/sidebaroffcanvas" />
+        <!-- main panel-->
+        <div class="main-panel">
+            <!--content-->
+            <div class="content-wrapper">
+                <!--row-->
+                <div class="row">
+                    <div class="col grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <p class="card-description">
+                                    Add Movie
+                                </p>
+                                <form class="m-4" enctype="multipart/form-data" id="add-form"
+                                      th:action="@{${movieParamDto.movieId == null ? '/movie/add' : '/movie/update/' + movieParamDto.movieId}}" method="post" th:object="${movieParamDto}">
+                                    <!-- Movie name -->
+                                    <div class="form-group"> <label for="movieName">Movie name<span class="text-danger">*</span></label>
+                                        <input th:field="*{movieName}"
+                                               type="text"
+                                               class="form-control"
+                                               id="movieName"
+                                               placeholder="Enter movie name"
+                                        />
+                                        <span class="text-danger" style="font-size: 0.812rem" th:errors="*{movieName}"></span>
+                                    </div>
+                                    <!-- Category -->
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <div id="category-input" class="d-flex flex-wrap">
+                                            <div th:each="category : ${categoryListAll}" class="d-inline-block w-50">
+                                                <input type="checkbox"
+                                                       th:checked="${categoryChooseList.contains(category)}"
+                                                       th:id="${category.categoryName}"
+                                                       name="categories" th:value="${category.categoryName}">
+
+                                                <label th:text="${category.categoryName}"
+                                                       th:for="${category.categoryName}"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Movie Format -->
+                                    <div class="form-group">
+                                        <label>Movie Format</label>
+                                        <div id="format-input" class="d-flex flex-wrap">
+                                            <div th:each="format : ${movieFormatList}" class="d-inline-block w-50">
+                                                <input th:disabled="${checkMovieInSchedule}" type="checkbox"
+                                                       th:checked="${movieFormatChooseList.contains(format)}"
+                                                       th:id="${format.movieFormatName}"
+                                                       name="movieFormats" th:value="${format.movieFormatName}">
+                                                <label th:text="${format.movieFormatName}"
+                                                        th:for="${format.movieFormatName}"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Director -->
+                                    <div class="form-group">
+                                        <label for="director">Director</label>
+                                        <input type="text"
+                                               th:field="*{director}"
+                                               class="form-control"
+                                               id="director"
+                                               placeholder="Enter director"
+                                        />
+                                    </div>
+                                    <!-- Actor -->
+                                    <div class="form-group">
+                                        <label for="actor">Actor</label>
+                                        <input  th:field="*{actor}"
+                                                type="text"
+                                                class="form-control"
+                                                id="actor"
+                                                placeholder="Enter actor"
+                                        />
+                                    </div>
+                                    <!-- Age restriction -->
+                                    <div class="form-group">
+                                        <label for="ar">Age Restriction</label>
+                                        <input  th:field="*{ageRestriction}"
+                                                type="number"
+                                                class="form-control"
+                                                id="ar"
+                                                placeholder="Enter age restriction"
+                                        />
+                                        <span class="text-danger" style="font-size: 0.812rem"  th:errors="*{ageRestriction}"></span>
+                                    </div>
+                                    <!-- Duration -->
+                                    <div class="form-group">
+                                        <label for="duration">Duration<span class="text-danger">*</span></label>
+                                        <input  th:field="*{duration}"
+                                                type="number"
+                                                class="form-control"
+                                                id="duration"
+                                                placeholder="Enter duration"
+                                        />
+                                        <span class="text-danger" style="font-size: 0.812rem"  th:errors="*{duration}"></span>
+                                    </div>
+
+                                    <!-- Year -->
+                                    <div class="form-group">
+                                        <label for="year">Year<span class="text-danger">*</span></label>
+                                        <input  th:field="*{year}"
+                                                type="number"
+                                                class="form-control"
+                                                id="year"
+                                                placeholder="Enter year"
+                                        />
+                                        <span class="text-danger" style="font-size: 0.812rem"  th:errors="*{year}"></span>
+                                    </div>
+                                    <!-- Star date -->
+                                    <div class="form-group">
+                                        <label for="start-date">Start date<span class="text-danger">*</span></label>
+                                        <input th:readonly="${checkMovieInSchedule}" th:field="*{startDate}"
+                                                type="date"
+                                                class="form-control"
+                                                id="start-date"
+                                                placeholder="Enter star date"
+                                        />
+                                        <span class="text-danger" style="font-size: 0.812rem"  th:errors="*{startDate}"></span>
+                                    </div>
+                                    <!-- End date -->
+                                    <div class="form-group">
+                                        <label for="end-date">End date<span class="text-danger">*</span></label>
+                                        <input th:readonly="${checkMovieInSchedule}" th:field="*{endDate}"
+                                               type="date"
+                                               class="form-control"
+                                               id="end-date"
+                                               placeholder="Enter end date"
+                                        />
+                                        <span class="text-danger" style="font-size: 0.812rem"  th:errors="*{endDate}"></span>
+                                    </div>
+
+                                    <!-- Trailer -->
+                                    <div class="form-group">
+                                        <label for="trailer">Trailer</label>
+                                        <input  th:field="*{trailer}"
+                                                type="text"
+                                                class="form-control"
+                                                id="trailer"
+                                                placeholder="Enter URL trailer"
+                                        />
+                                        <span class="text-danger" style="font-size: 0.812rem"  th:errors="*{trailer}"></span>
+                                    </div>
+                                    <!-- Price -->
+                                    <div class="form-group">
+                                        <label for="price">Price<span class="text-danger">*</span></label>
+                                        <input  th:field="*{moviePrice}"
+                                                type="number"
+                                                class="form-control"
+                                                id="price"
+                                                placeholder="Enter price"
+                                        />
+                                        <span class="text-danger" style="font-size: 0.812rem"  th:errors="*{moviePrice}"></span>
+                                    </div>
+                                    <!-- Img big -->
+                                    <div class="form-group">
+                                        <label class="form-label" for="imgBig">Image Large</label>
+                                        <input th:field="*{imageLarge}" accept="image/jpeg, image/png" type="file" class="form-control" name="imgBig" id="imgBig" style="height:43px"/>
+                                        <img th:if="${movieParamDto.imageLargeUrl}" style="max-height: 70px; max-width: 70px; margin-top: 4px" th:src="@{'/files/'+${movieParamDto.imageLargeUrl}}">
+                                    </div>
+                                    <!-- Img small -->
+                                    <div class="form-group">
+                                        <label class="form-label" for="imgSmall">Image Small</label>
+                                        <input th:field="*{imageSmall}" accept="image/jpeg, image/png" type="file" class="form-control" name="imgSmall" id="imgSmall" style="height:43px"/>
+                                        <img th:if="${movieParamDto.imageSmallUrl}" style="max-height: 70px; max-width: 70px; margin-top: 4px" th:src="@{'/files/'+${movieParamDto.imageSmallUrl}}">
+                                    </div>
+                                    <!-- Description -->
+                                    <div class="form-group">
+                                        <label for="des">Description</label>
+                                        <textarea th:field="*{description}" class="form-control h-100" id="des" cols="30" rows="10" placeholder="Enter description"></textarea>
+                                    </div>
+                                    <!--  Button  Reset and Submit-->
+                                    <div class="form-group">
+
+                                        <!-- Button trigger modal -->
+                                        <button id="modal-btn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                            Review
+                                        </button>
+
+                                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Review Movie Information</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div id="modal-body" class="modal-body">
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-primary">Save</button>
+                                                        <a type="button" class="btn btn-danger text-white" data-dismiss="modal">Close</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <button type="reset" class="btn btn-danger">Reset</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--footers-->
+            <th:block th:insert="fragment/footers" />
+
+        </div>
+        <!-- main panel ends -->
+    </div>
+    <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+
+<script>
+    $('#modal-btn').click(function () {
+        let movieName = $('#add-form #movieName').val()
+        let movieCategories = $('#add-form #category-input input[type=checkbox]:checked').map(function () {
+            return $(this).val()
+        }).get();
+        let movieFormats = $('#add-form #format-input input[type=checkbox]:checked').map(function () {
+            return $(this).val()
+        }).get();
+        let director = $('#add-form #director').val()
+        let actor = $('#add-form #actor').val()
+        let ageRestriction = $('#add-form #ar').val()
+        let duration = $('#add-form #duration').val()
+        let year = $('#add-form #year').val()
+        let startDate = $('#add-form #start-date').val()
+        let endDate = $('#add-form #end-date').val()
+        let trailer = $('#add-form #trailer').val()
+        let price = $('#add-form #price').val()
+        let imgBig = $('#add-form #imgBig').val()
+        let imgSmall = $('#add-form #imgSmall').val()
+        let description = $('#add-form #des').val()
+        $('#modal-body').empty();
+        $('#modal-body').append(`
+            <p><span class="fw-bold">Movie Name : </span>${movieName}</p>
+            <p><span class="fw-bold" >Movie Categories : </span>${movieCategories}</p>
+            <p><span class="fw-bold" >Movie Format : </span>${movieFormats}</p>
+            <p><span class="fw-bold">Director : </span>${director}</p>
+            <p><span class="fw-bold">Actor : </span>${actor}</p>
+            <p><span class="fw-bold">Age Restriction : </span>${ageRestriction}</p>
+            <p><span class="fw-bold">Duration : </span>${duration}</p>
+            <p><span class="fw-bold">Year : </span>${year}</p>
+            <p><span class="fw-bold">Start Date : </span>${startDate}</p>
+            <p><span class="fw-bold">End Date : </span>${endDate}</p>
+            <p><span class="fw-bold">Trailer : </span>${trailer}</p>
+            <p><span class="fw-bold">Price : </span>${price}</p>
+            <p><span class="fw-bold">Large Image : </span>${imgBig}</p>
+            <p><span class="fw-bold">Small Image : </span>${imgSmall}</p>
+            <p><span class="fw-bold">Description : </span>${description}</p>
+        `)
+    })
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Voucher-view</title>
+  <th:block th:insert="fragment/head" />
+  <link rel="stylesheet" th:href="@{/styles/animation.css}">
+</head>
+<body>
+<div class="container-scroller">
+
+  <!--navbar-->
+  <th:block th:insert="fragment/navbar" />
+  <!--container-->
+  <div class="container-fluid page-body-wrapper">
+    <!--theme wrapper-->
+    <th:block th:insert="fragment/themewrapper" />
+    <!--right side bar-->
+    <th:block th:insert="fragment/rightsidebar" />
+    <!-- side bar offcanvas-->
+    <th:block th:insert="fragment/sidebaroffcanvas" />
+    <!-- main panel-->
+    <div class="main-panel">
+      <!--content-->
+      <div class="content-wrapper">
+        <!--row-->
+        <div class="row">
+          <div class="col">
+            <div class="home-tab">
+              <!--tab list-->
+              <th:block th:insert="fragment/tablist" />
+              <div class="tab-content tab-content-basic">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Voucher List</h4>
+
+                    <!--    modal confirm delete-->
+                    <div class="modal"  id="deleteConfirm"  role="dialog"></div>
+
+                    <!--    result action-->
+                    <div  id="result" class="alert alert-success"
+                         style="width: fit-content"
+                         role="alert"
+                         th:if="${result}"
+                         th:text="${result}">
+                    </div>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                        <tr>
+                          <th>No</th>
+                          <th scope="col">
+                                                            <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('-voucherName')}"><ion-icon name="caret-down-outline"></ion-icon>
+                                                            </span>
+                            <span th:each="s : ${sorts}" th:if="${s.equalsIgnoreCase('voucherName')}"><ion-icon name="caret-up-outline"></ion-icon>
+                                                            </span>
+                            <a style="text-decoration: none; color: black"
+                               th:attr="onclick=|return changeHref('voucherName')|"
+                               id="voucherName">
+                              Voucher Name
+                            </a>
+                          </th>
+                          <th>Discount</th>
+                          <th>Start Time</th>
+                          <th>End Time</th>
+                          <th>Status</th>
+                          <th>Type</th>
+                          <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="e,i : ${voucherList}">
+                          <td th:text="${pageNumber*size + i.count}">
+
+                          </td>
+                          <td   >
+                            <p style="width: 200px;white-space: break-spaces; word-wrap: break-word;margin: 0;" th:text="${e.getVoucherName()}"></p>
+                          </td>
+                          <td th:text="${e.getDiscount()}">
+
+                          </td>
+                          <td th:text="${e.getStartTime()}">
+
+                          </td>
+                          <td th:text="${e.getEndTime()}">
+
+                          </td>
+                          <td  th:if="${e.getStatus()}">Active
+                          </td>
+                          <td  th:unless="${e.getStatus()}">Unactive
+                          </td>
+                          <td th:text="${e.getType()}">
+
+                          </td>
+                          <td>
+                            <a th:href="@{/voucher/update/{id}(id=${e.getVoucherId()})}" class="btn btn-warning m-0 ">
+                              <ion-icon name="create-outline" ></ion-icon>
+                            </a>
+                            <a type="button" class="btn btn-danger m-0" data-toggle="modal" data-target="#exampleModal">
+                              <ion-icon name="trash-outline"></ion-icon>
+                            </a>
+                          </td>
+                          <!-- Modal -->
+                          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <p class="text-danger">Voucher will be Deleted</p>
+                                  <p><b>ARE YOU SURE ?</b></p>
+                                </div>
+                                <div class="modal-footer">
+                                  <a type="button" class="btn btn-danger text-white" th:href="@{/voucher/delete/{id}(id=${e.getVoucherId()})}">Yes</a>
+                                  <a type="button" class="btn btn-primary text-white" data-dismiss="modal">No</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<!--           pagination-->
+          <th:block th:insert="fragment/pagination" />
+        </div>
+
+      </div>
+
+
+
+      <!--footers-->
+      <th:block th:insert="fragment/footers" />
+
+    </div>
+    <!-- main panel ends -->
+  </div>
+  <!-- page body wrapper ends -->
+</div>
+<!-- container scroller -->
+
+<script th:inline="javascript">
+    const sortArray = [[${sorts}]];
+    const contextPath = /*[[@{/}]]*/ '';
+    let sortInHref;
+    const currentSort  = [];
+
+    for(let i = 0; i < sortArray.length; i++){
+        if(String(sortArray[i]) !== ""){
+            currentSort.push(sortArray[i]);
+        }
+    }
+
+    function paging(pageNumber, size, keyword, filter){
+        Number(pageNumber);
+        Number(size);
+        sortInHref = sortInHref.concat("?pageNumber=",pageNumber,"&size=",size);
+
+        if(String(keyword) !=="null" && String(keyword) !== ""){
+            sortInHref= sortInHref.concat("&q=",keyword,"&filter=",filter);
+        }
+        for(let i = 0; i< currentSort.length; i++){
+            sortInHref = sortInHref.concat("&sort=",currentSort[i]);
+        }
+
+    }
+
+
+    function changeHref(field){
+        let existed = 0;
+        for (let i = 0; i<currentSort.length; i++) {
+            if (currentSort[i].includes("-".concat(field))) {
+                currentSort[i] = "";
+                existed = 1;
+                break;
+            } else if (currentSort[i].includes(field)) {
+                currentSort[i] = "-".concat(field);
+                existed = 1;
+                break;
+            }
+        }
+        if(existed === 0 && !currentSort.includes(field) && currentSort.length <=2){
+            currentSort.push(field);
+        }
+        else if (existed === 0 && !currentSort.includes(field) && currentSort.length === 3){
+            currentSort[2] = field;
+        }
+
+        if (currentSort.length ===0){
+            currentSort.push(field);
+        }
+        for (let i = 0; i<currentSort.length; i++){
+            if (i === 0){
+                sortInHref = "?sort=".concat(currentSort[i]);
+                continue;
+            }
+            sortInHref = sortInHref.concat("&sort=",currentSort[i]);
+        }
+        document.getElementById(field).href = contextPath.concat("voucher",sortInHref);
+    }
+
+    const myTimeout = setTimeout(display, 5000);
+
+    function display(){
+        const x = document.getElementById("result");
+        if(x){
+            x.style.display = "none";
+        }
+    }
+
+</script>
+
+</body>
+
+</html>
+
